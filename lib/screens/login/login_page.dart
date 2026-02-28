@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jiburo_app/screens/login/login_section.dart';
+import 'package:jiburo_app/widgets/plain_layout.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  Widget build(BuildContext context) {
+    return PlainLayout(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              flex: 1,
+              child: Center(
+                child: SvgPicture.asset(
+                  "assets/images/logos/homeLogo.svg",
+                  width: 120,
+                ),
+              ),
+            ),
+            Flexible(flex: 1, child: LoginSection()),
+          ],
+        ),
+      ),
+    );
+  }
+}
