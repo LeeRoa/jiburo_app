@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:jiburo_app/styles/colors.dart';
+import 'package:jiburo_app/styles/fonts.dart';
+
+enum AppBarStatus { notify, map, info }
 
 class NewAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final bool isNew;
+  final bool isHome;
+  final Widget? icRight;
+  final String? titleText;
+  final void Function()? onBackTap;
+  final void Function()? onTap;
 
-  const NewAppBar({super.key, required this.isNew});
+  const NewAppBar({
+    super.key,
+    required this.isHome,
+    this.titleText,
+    this.onBackTap,
+    this.onTap,
+    this.icRight,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
@@ -19,15 +33,23 @@ class NewAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(width: 24),
-            SvgPicture.asset("assets/images/logos/Jiburo-text-logo.svg"),
-            SizedBox(
-              width: 24,
-              child: SvgPicture.asset(
-                isNew
-                    ? "assets/images/icons/ic_status=new.svg"
-                    : "assets/images/icons/ic_status=normal.svg",
+            GestureDetector(
+              onTap: onBackTap,
+              child: SizedBox(
+                width: 24,
+                child: isHome
+                    ? null
+                    : SvgPicture.asset('assets/images/icons/ic_Left-Arrow.svg'),
               ),
+            ),
+
+            isHome
+                ? SvgPicture.asset("assets/images/logos/Jiburo-text-logo.svg")
+                : Text(titleText!, style: AppFonts.hd2SB),
+
+            GestureDetector(
+              onTap: onTap,
+              child: SizedBox(width: 24, child: icRight),
             ),
           ],
         ),

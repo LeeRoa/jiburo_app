@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  // Common
   static const Color white = Colors.white;
   static const Color black = Colors.black;
+
+  // Point
   static const Color point95 = Color(0xFFFFE5EC);
   static const Color point90 = Color(0xFFFFCCD9);
+  // Point Color 1.5
   static const Color point1_5 = Color(0xFFFFB2C7);
   static const Color point80 = Color(0xFFFF99B4);
   static const Color point70 = Color(0xFFFF668E);
@@ -16,6 +20,7 @@ class AppColors {
   static const Color point15 = Color(0xFF33000D);
   static const Color point5 = Color(0xFF1A0007);
 
+  // Neutral
   static const Color neutral99 = Color(0xFFF7F7F7);
   static const Color neutral95 = Color(0xFFDCDCDC);
   static const Color neutral90 = Color(0xFFC4C4C4);
@@ -31,10 +36,12 @@ class AppColors {
   static const Color neutral10 = Color(0xFF171717);
   static const Color neutral5 = Color(0xFF0F0F0F);
 
+  // Other Colors
   static const Color interactionRed = Color(0xFFCC0036);
   static const Color blue = Color(0xFF0C79FE);
-  static const Color errorRef = Color(0xFFFF4242);
+  static const Color errorRed = Color(0xFFFF4242);
 
+  // SNS
   static const Color naverGreen = Color(0xFF03C75A);
   static const Color kakaoYellow = Color(0xFFFEE500);
 }

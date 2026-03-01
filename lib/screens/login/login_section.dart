@@ -7,17 +7,17 @@ class LoginSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min, // 중요
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text("서비스 시작하기", style: AppFonts.hd1SB),
-          SizedBox(height: 20),
-          SocialLoginButtons(),
-        ],
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text("서비스 시작하기", style: AppFonts.hd1SB),
+            SizedBox(height: 20),
+            SocialLoginButtons(),
+          ],
+        ),
       ),
     );
   }

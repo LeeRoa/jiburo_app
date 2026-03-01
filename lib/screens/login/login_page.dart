@@ -17,17 +17,19 @@ class _LoginPageState extends State<LoginPage> {
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Flexible(
-              flex: 1,
-              child: Center(
+            SizedBox(height: 32),
+            Expanded(
+              child: Container(
+                alignment: Alignment.center,
                 child: SvgPicture.asset(
                   "assets/images/logos/homeLogo.svg",
                   width: 120,
                 ),
               ),
             ),
-            Flexible(flex: 1, child: LoginSection()),
+            LoginSection(),
           ],
         ),
       ),
