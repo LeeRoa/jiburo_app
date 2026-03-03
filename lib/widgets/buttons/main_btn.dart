@@ -4,35 +4,50 @@ import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
 
 enum Variant {
-  primary(bgColor: AppColors.point50, textColor: AppColors.white),
-  assistive(bgColor: AppColors.neutral95, textColor: AppColors.black),
-  outline(bgColor: AppColors.white, textColor: AppColors.point50);
+  primary(
+    bgColor: AppColors.point50,
+    pressedColor: AppColors.interactionRed,
+    textColor: AppColors.white,
+  ),
+  assistive(
+    bgColor: AppColors.neutral95,
+    pressedColor: AppColors.neutral80,
+    textColor: AppColors.black,
+  ),
+  outline(
+    bgColor: AppColors.white,
+    pressedColor: AppColors.interactionRed,
+    textColor: AppColors.point50,
+  );
 
   final Color bgColor;
   final Color textColor;
+  final Color pressedColor;
 
-  const Variant({required this.bgColor, required this.textColor});
+  const Variant({
+    required this.bgColor,
+    required this.textColor,
+    required this.pressedColor,
+  });
 }
 
 enum Size {
-  large(height: 48, iconSize: 24, horizontalPd: 28, verticalPd: 12),
-  medium(height: 40, iconSize: 20, horizontalPd: 20, verticalPd: 9),
-  small(height: 32, iconSize: 18, horizontalPd: 14, verticalPd: 7);
+  large(iconSize: 24, horizontalPd: 28, verticalPd: 12),
+  medium(iconSize: 20, horizontalPd: 20, verticalPd: 9),
+  small(iconSize: 18, horizontalPd: 14, verticalPd: 7);
 
-  final double height;
   final double iconSize;
   final double horizontalPd;
   final double verticalPd;
 
   const Size({
-    required this.height,
     required this.iconSize,
     required this.horizontalPd,
     required this.verticalPd,
   });
 }
 
-class MainBtn extends StatelessWidget {
+class MainBtn extends StatefulWidget {
   final String btnName;
   final Variant variant;
   final Size size;
@@ -42,6 +57,7 @@ class MainBtn extends StatelessWidget {
   final bool isExpanded;
   final bool isIconOnly;
   final double resizeBorderRadius;
+  final void Function() onTap;
 
   const MainBtn({
     super.key,
@@ -54,13 +70,22 @@ class MainBtn extends StatelessWidget {
     this.isExpanded = false,
     this.isIconOnly = false,
     this.resizeBorderRadius = 0,
+    required this.onTap,
   });
 
-  Color get btnBgColor => variant.bgColor;
-  Color get btnTextColor => variant.textColor;
+  @override
+  State<MainBtn> createState() => _MainBtnState();
+}
+
+class _MainBtnState extends State<MainBtn> {
+  bool _isPressed = false;
+
+  Color get btnBgColor => widget.variant.bgColor;
+  Color get btnTextColor => widget.variant.textColor;
+  Color get pressedColor => widget.variant.pressedColor;
 
   TextStyle get font {
-    switch (size) {
+    switch (widget.size) {
       case Size.large:
         return AppFonts.b1nSB;
       case Size.medium:
@@ -73,26 +98,36 @@ class MainBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Container(
-        width: isExpanded ? double.infinity : null,
-        height: size.height,
-        padding: isIconOnly
-            ? EdgeInsets.all(size.verticalPd)
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: widget.onTap,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 120),
+        width: widget.isExpanded ? double.infinity : null,
+
+        constraints: BoxConstraints(minHeight: 32, maxHeight: 48),
+        padding: widget.isIconOnly
+            ? EdgeInsets.all(widget.size.verticalPd)
             : EdgeInsets.symmetric(
-                vertical: size.verticalPd,
-                horizontal: size.horizontalPd,
+                vertical: widget.size.verticalPd,
+                horizontal: widget.size.horizontalPd,
               ),
         decoration: BoxDecoration(
-          color: isDisabled ? AppColors.white : btnBgColor,
+          color: _isPressed && widget.variant != Variant.outline
+              ? pressedColor
+              : widget.isDisabled
+              ? AppColors.white
+              : btnBgColor,
           borderRadius: BorderRadius.circular(
-            resizeBorderRadius > 0
-                ? resizeBorderRadius
-                : Variant.primary == variant
+            widget.resizeBorderRadius > 0
+                ? widget.resizeBorderRadius
+                : Variant.primary == widget.variant
                 ? 12
                 : 10,
           ),
-          border: Variant.outline == variant
-              ? Border.all(color: AppColors.point50)
+          border: widget.variant == Variant.outline
+              ? Border.all(color: _isPressed ? pressedColor : AppColors.point50)
               : null,
         ),
         child: Row(
@@ -101,27 +136,30 @@ class MainBtn extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 6,
           children: [
-            SizedBox(
-              width: size.iconSize,
-
-              child: icLeft != ""
-                  ? _iconWidget(iconPath: icLeft, isDisabled: isDisabled)
-                  : null,
-            ),
-            if (!isIconOnly)
+            if (widget.icLeft != '')
+              _iconWidget(
+                iconSize: widget.size.iconSize,
+                iconPath: widget.icLeft,
+                isDisabled: widget.isDisabled,
+              ),
+            if (!widget.isIconOnly)
               Text(
-                btnName,
+                widget.btnName,
                 style: font.copyWith(
-                  color: isDisabled ? AppColors.neutral80 : btnTextColor,
+                  color: widget.variant == Variant.outline && _isPressed
+                      ? pressedColor
+                      : widget.isDisabled
+                      ? AppColors.neutral80
+                      : btnTextColor,
                 ),
               ),
-            if (!isIconOnly)
-              SizedBox(
-                width: size.iconSize,
-                child: icRight != ""
-                    ? _iconWidget(iconPath: icRight, isDisabled: isDisabled)
-                    : null,
-              ),
+            if (!widget.isIconOnly)
+              if (widget.icRight != '')
+                _iconWidget(
+                  iconSize: widget.size.iconSize,
+                  iconPath: widget.icRight,
+                  isDisabled: widget.isDisabled,
+                ),
           ],
         ),
       ),
@@ -129,11 +167,19 @@ class MainBtn extends StatelessWidget {
   }
 }
 
-Widget _iconWidget({required String iconPath, required bool isDisabled}) {
-  return SvgPicture.asset(
-    iconPath,
-    colorFilter: isDisabled
-        ? ColorFilter.mode(AppColors.neutral80, BlendMode.src)
-        : null,
+Widget _iconWidget({
+  required double iconSize,
+  required String iconPath,
+  required bool isDisabled,
+}) {
+  return SizedBox(
+    width: iconSize,
+    height: iconSize,
+    child: SvgPicture.asset(
+      iconPath,
+      colorFilter: isDisabled
+          ? ColorFilter.mode(AppColors.neutral80, BlendMode.src)
+          : null,
+    ),
   );
 }

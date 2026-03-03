@@ -53,12 +53,13 @@ class _HomePageState extends State<HomePage> {
           // 지도 들어갈 자리
           // AbsorbPointer 레이어 됐을 때 밑바닥 터치 방지
           AbsorbPointer(
-            absorbing: true,
+            absorbing: false,
             child: MainBtn(
               btnName: '텍스트',
-              variant: Variant.primary,
-              size: Size.medium,
-              isExpanded: true,
+              variant: Variant.outline,
+              size: Size.large,
+              // isExpanded: ,
+              onTap: () => print('클릭'),
             ),
           ),
           DraggableScrollableWidget(),

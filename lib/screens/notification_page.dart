@@ -9,9 +9,14 @@ class DemoModel {
   DemoModel({required this.content, required this.isNew});
 }
 
-class NotificationPage extends StatelessWidget {
+class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
 
+  @override
+  State<NotificationPage> createState() => _NotificationPageState();
+}
+
+class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     final List<DemoModel> items = [
@@ -27,51 +32,57 @@ class NotificationPage extends StatelessWidget {
       DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
     ];
 
-    return Container(
-      decoration: BoxDecoration(color: AppColors.white),
-      padding: EdgeInsets.only(top: 8),
-      child: ListView(
-        children: [
-          for (var item in items)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        '캡션',
-                        style: AppFonts.c1SB.copyWith(color: AppColors.point50),
-                      ),
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: AppColors.point50,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(item.content, style: AppFonts.l1rM),
-                  Text(
-                    '날짜 또는 부가 정보',
-                    style: AppFonts.c1R.copyWith(color: AppColors.neutral60),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 1,
-                    decoration: BoxDecoration(color: AppColors.neutral95),
-                  ),
-                ],
-              ),
-            ),
-        ],
+    return RawScrollbar(
+      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 15),
+      thickness: 3,
+      radius: const Radius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(color: AppColors.white),
+        padding: EdgeInsets.only(top: 8),
+        child: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return _buildItems(items[index]);
+          },
+        ),
       ),
     );
   }
+}
+
+Widget _buildItems(DemoModel item) {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 32),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('캡션', style: AppFonts.c1SB.copyWith(color: AppColors.point50)),
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: AppColors.point50,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ],
+        ),
+        Text(item.content, style: AppFonts.l1rM),
+        Text(
+          '날짜 또는 부가 정보',
+          style: AppFonts.c1R.copyWith(color: AppColors.neutral60),
+        ),
+        Container(
+          width: double.infinity,
+          height: 1,
+          decoration: BoxDecoration(color: AppColors.neutral95),
+        ),
+      ],
+    ),
+  );
 }

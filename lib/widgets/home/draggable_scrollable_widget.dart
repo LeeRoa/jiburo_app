@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
+import 'package:jiburo_app/widgets/buttons/main_btn.dart';
 
 class FindPetsModel {
   final String name;
@@ -35,6 +36,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
   bool isScrolled = false;
   final DraggableScrollableController sheetController =
       DraggableScrollableController();
+
   final List<FindPetsModel> pets = [
     FindPetsModel(
       name: '복돌이',
@@ -57,13 +59,13 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: false,
     ),
     FindPetsModel(
-      name: '레이',
+      name: '영숙이',
       breeds: '고양이',
-      missingSpot: '서울시 강동구 고덕동',
-      area: '1',
-      reward: '20',
+      missingSpot: '서울시 강동구 명일동',
+      area: '2',
+      reward: '50',
       time: '5',
-      imgPath: 'assets/images/3.jpg',
+      imgPath: 'assets/images/4.png',
       isLike: false,
     ),
     FindPetsModel(
@@ -73,7 +75,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       area: '5',
       reward: '30',
       time: '1',
-      imgPath: 'assets/images/1.jpg',
+      imgPath: 'assets/images/5.png',
       isLike: true,
     ),
     FindPetsModel(
@@ -127,121 +129,167 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: false,
     ),
   ];
+
   @override
   void initState() {
     super.initState();
+
+    // sheetController.addListener(() {
+    //   final currentSize = sheetController.size;
+    //
+    //   print('current: $currentSize');
+    //   if (currentSize > 0.39 && !isScrolled) {
+    //     setState(() {
+    //       isScrolled = true;
+    //     });
+    //   } else if (currentSize == 0.39 && isScrolled) {
+    //     setState(() {
+    //       isScrolled = false;
+    //     });
+    //   }
+    // });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final media = MediaQuery.of(context);
+    final height = media.size.height;
+    final safeHeight = height - media.padding.top - media.padding.bottom;
+
+    final minSize = 380 / safeHeight; // 실제 픽셀 기준으로 비율 계산
+
     sheetController.addListener(() {
       final currentSize = sheetController.size;
-      if (currentSize > 0.39 && !isScrolled) {
+
+      if (currentSize > minSize && !isScrolled) {
         setState(() {
           isScrolled = true;
         });
-      } else if (currentSize == 0.39 && isScrolled) {
+      } else if (currentSize == minSize && isScrolled) {
         setState(() {
           isScrolled = false;
         });
       }
     });
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       controller: sheetController,
-      initialChildSize: 0.41,
-      minChildSize: 0.41,
+      initialChildSize: minSize,
+      minChildSize: minSize,
       maxChildSize: 1,
       builder: (BuildContext context, ScrollController scrollController) {
-        return Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                offset: const Offset(0, 4),
-                blurRadius: 4,
-                spreadRadius: 10,
+        return Stack(
+          children: [
+            Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    offset: const Offset(0, 4),
+                    blurRadius: 4,
+                    spreadRadius: 10,
+                  ),
+                ],
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               ),
-            ],
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-          ),
-          child: Scrollbar(
-            controller: scrollController,
-            thickness: 0.6,
-            radius: const Radius.circular(10),
-            child: CustomScrollView(
-              controller: scrollController,
-              scrollBehavior: ScrollBehavior().copyWith(overscroll: false),
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                // 스크롤 고정
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _HeaderDelegate(
-                    child: Container(
-                      decoration: BoxDecoration(color: AppColors.white),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 16),
-                          Container(
-                            width: 142,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: AppColors.neutral50,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          Container(
-                            color: AppColors.white, // 배경색이 있어야 리스트가 뒤로 가려짐
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            alignment: Alignment.center,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '지호님, 친구들을 찾아\n집으로 보내주세요',
-                                  style: AppFonts.hd2SB,
+              child: RawScrollbar(
+                controller: scrollController,
+                thumbVisibility: true,
+                thickness: 3,
+                radius: const Radius.circular(8),
+                padding: EdgeInsets.only(top: 124, bottom: 20, right: 4),
+                child: CustomScrollView(
+                  controller: scrollController,
+                  scrollBehavior: ScrollBehavior().copyWith(overscroll: false),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    // 스크롤 고정
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _HeaderDelegate(
+                        child: Container(
+                          decoration: BoxDecoration(color: AppColors.white),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 16),
+                              Container(
+                                width: 142,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: AppColors.neutral50,
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  spacing: 16,
+                              ),
+                              const SizedBox(height: 24),
+                              Container(
+                                color: AppColors.white, // 배경색이 있어야 리스트가 뒤로 가려짐
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    SvgPicture.asset(
-                                      'assets/images/icons/ic_Search.svg',
+                                    Text(
+                                      '지호님, 친구들을 찾아\n집으로 보내주세요',
+                                      style: AppFonts.hd2SB,
                                     ),
-                                    SvgPicture.asset(
-                                      'assets/images/icons/ic_Refresh.svg',
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      spacing: 16,
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/images/icons/ic_Search.svg',
+                                        ),
+                                        SvgPicture.asset(
+                                          'assets/images/icons/ic_Refresh.svg',
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: 24),
+                            ],
                           ),
-                          const SizedBox(height: 24),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
 
-                SliverPadding(
-                  padding: const EdgeInsetsGeometry.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => _buildPetItem(pets[index]),
-                      childCount: pets.length,
+                    SliverPadding(
+                      padding: const EdgeInsetsGeometry.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) => _buildPetItem(pets[index]),
+                          childCount: pets.length,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            Positioned(
+              right: 16,
+              bottom: 14,
+              child: MainBtn(
+                btnName: '등록하기',
+                icLeft: 'assets/images/icons/ic_Plus.svg',
+                isIconOnly: isScrolled,
+                resizeBorderRadius: 40,
+                size: Size.medium,
+                onTap: () {},
+              ),
+            ),
+          ],
         );
       },
     );
@@ -312,7 +360,7 @@ Widget _buildPetItem(FindPetsModel pet) {
                         ),
                       ),
                       SvgPicture.asset(
-                        'assets/images/icons/tab-bar/ic_Save.svg',
+                        'assets/images/icons/tab-bar/ic_Save${pet.isLike ? '=Active' : ''}.svg',
                         width: 24,
                         height: 24,
                       ),
@@ -350,9 +398,9 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 118.0; // 제목 영역의 높이
+  double get maxExtent => 124.0; // 제목 영역의 높이
   @override
-  double get minExtent => 118.0; // 고정되었을 때의 높이
+  double get minExtent => 124.0; // 고정되었을 때의 높이
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
