@@ -62,12 +62,6 @@ class _MainLayoutState extends State<MainLayout> {
               color: Colors.black.withValues(alpha: 0.05),
             ),
           ],
-          // border: const Border(
-          //   top: BorderSide(
-          //     color: Color(0x0D000000), // 0.05 opacity
-          //     width: 1,
-          //   ),
-          // ),
         ),
         child: Theme(
           data: ThemeData(

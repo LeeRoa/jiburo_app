@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jiburo_app/screens/home/home_page.dart';
+import 'package:jiburo_app/screens/home/home_tab.dart';
 import 'package:jiburo_app/screens/loading_page.dart';
 import 'package:jiburo_app/screens/login/login_page.dart';
 import 'package:jiburo_app/screens/message_page.dart';
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(fontFamily: "Pretendard"),
       // home: LoadingPage(),
       home: isLogin
-          ? MainLayout(child: [HomePage(), MessagePage(), SavePage()])
+          ? MainLayout(child: [HomeTab(), MessagePage(), SavePage()])
           : LoginPage(),
     );
   }

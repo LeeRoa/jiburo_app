@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
+import 'package:jiburo_app/widgets/buttons/icon_btn.dart';
 import 'package:jiburo_app/widgets/buttons/main_btn.dart';
+import 'package:jiburo_app/widgets/input_text_widget.dart';
 
 class FindPetsModel {
   final String name;
@@ -36,6 +37,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
   bool isScrolled = false;
   final DraggableScrollableController sheetController =
       DraggableScrollableController();
+  bool isSearchMode = false;
 
   final List<FindPetsModel> pets = [
     FindPetsModel(
@@ -133,21 +135,12 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
   @override
   void initState() {
     super.initState();
+  }
 
-    // sheetController.addListener(() {
-    //   final currentSize = sheetController.size;
-    //
-    //   print('current: $currentSize');
-    //   if (currentSize > 0.39 && !isScrolled) {
-    //     setState(() {
-    //       isScrolled = true;
-    //     });
-    //   } else if (currentSize == 0.39 && isScrolled) {
-    //     setState(() {
-    //       isScrolled = false;
-    //     });
-    //   }
-    // });
+  void onTapSearchMode() {
+    setState(() {
+      isSearchMode = true;
+    });
   }
 
   @override
@@ -202,8 +195,8 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                 padding: EdgeInsets.only(top: 124, bottom: 20, right: 4),
                 child: CustomScrollView(
                   controller: scrollController,
-                  scrollBehavior: ScrollBehavior().copyWith(overscroll: false),
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  // scrollBehavior: ScrollBehavior().copyWith(overscroll: false),
+                  // physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     // 스크롤 고정
                     SliverPersistentHeader(
@@ -233,25 +226,38 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '지호님, 친구들을 찾아\n집으로 보내주세요',
-                                      style: AppFonts.hd2SB,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      spacing: 16,
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/images/icons/ic_Search.svg',
-                                        ),
-                                        SvgPicture.asset(
-                                          'assets/images/icons/ic_Refresh.svg',
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  children: isSearchMode
+                                      ? [
+                                          InputTextWidget(
+                                            placeHolder: '지역명/이름을 검색해보세요',
+                                          ),
+                                        ]
+                                      : [
+                                          Text(
+                                            '지호님, 친구들을 찾아\n집으로 보내주세요',
+                                            style: AppFonts.hd2SB,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            spacing: 16,
+                                            // icons
+                                            children: [
+                                              IconBtn(
+                                                iconPath:
+                                                    'assets/images/icons/ic_Search.svg',
+                                                onTap: () => onTapSearchMode(),
+                                              ),
+                                              IconBtn(
+                                                iconPath:
+                                                    'assets/images/icons/ic_Refresh.svg',
+                                                onTap: () {
+                                                  print('새로고침 클릭');
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                 ),
                               ),
                               const SizedBox(height: 24),
@@ -322,32 +328,37 @@ Widget _buildPetItem(FindPetsModel pet) {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${pet.breeds} ${pet.name}', style: AppFonts.hd2SB),
-                      SizedBox(height: 4),
-                      Text(pet.missingSpot, style: AppFonts.l2M),
-                      Text("내 위치에서 ${pet.area}km 이내", style: AppFonts.c2R),
-                      SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Text('사례금 : ', style: AppFonts.l2M),
-                          Text(
-                            pet.reward,
-                            style: AppFonts.l2M.copyWith(
-                              color: AppColors.point50,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${pet.breeds} ${pet.name}',
+                          style: AppFonts.hd2SB,
+                        ),
+                        SizedBox(height: 4),
+                        Text(pet.missingSpot, style: AppFonts.l2M),
+                        Text("내 위치에서 ${pet.area}km 이내", style: AppFonts.c2R),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text('사례금 : ', style: AppFonts.l2M),
+                            Text(
+                              pet.reward,
+                              style: AppFonts.l2M.copyWith(
+                                color: AppColors.point50,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '만원',
-                            style: AppFonts.l2M.copyWith(
-                              color: AppColors.neutral60,
+                            Text(
+                              '만원',
+                              style: AppFonts.l2M.copyWith(
+                                color: AppColors.neutral60,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -359,10 +370,10 @@ Widget _buildPetItem(FindPetsModel pet) {
                           color: AppColors.neutral60,
                         ),
                       ),
-                      SvgPicture.asset(
-                        'assets/images/icons/tab-bar/ic_Save${pet.isLike ? '=Active' : ''}.svg',
-                        width: 24,
-                        height: 24,
+                      IconBtn(
+                        iconPath:
+                            'assets/images/icons/tab-bar/ic_Save${pet.isLike ? '=Active' : ''}.svg',
+                        onTap: () {},
                       ),
                     ],
                   ),
@@ -404,5 +415,5 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
+      true;
 }

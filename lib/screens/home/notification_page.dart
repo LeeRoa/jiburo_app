@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
+import 'package:jiburo_app/widgets/buttons/icon_btn.dart';
+import 'package:jiburo_app/widgets/new_app_bar.dart';
 
 class DemoModel {
   final String content;
@@ -32,18 +34,29 @@ class _NotificationPageState extends State<NotificationPage> {
       DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
     ];
 
-    return RawScrollbar(
-      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 15),
-      thickness: 3,
-      radius: const Radius.circular(10),
-      child: Container(
-        decoration: BoxDecoration(color: AppColors.white),
-        padding: EdgeInsets.only(top: 8),
-        child: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            return _buildItems(items[index]);
-          },
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: NewAppBar(
+        isHome: false,
+        titleText: '알림',
+        leading: BackButton(color: AppColors.neutral30),
+        actions: [
+          IconBtn(onTap: () {}, iconPath: 'assets/images/icons/ic_Etc.svg'),
+        ],
+      ),
+      body: RawScrollbar(
+        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 15),
+        thickness: 3,
+        radius: const Radius.circular(10),
+        child: Container(
+          decoration: BoxDecoration(color: AppColors.white),
+          padding: EdgeInsets.only(top: 8),
+          child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return _buildItems(items[index]);
+            },
+          ),
         ),
       ),
     );

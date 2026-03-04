@@ -7,18 +7,16 @@ enum AppBarStatus { notify, map, info }
 
 class NewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHome;
-  final Widget? icRight;
   final String? titleText;
-  final void Function()? onBackTap;
-  final void Function()? onTap;
+  final List<Widget>? actions;
+  final Widget? leading;
 
   const NewAppBar({
     super.key,
     required this.isHome,
     this.titleText,
-    this.onBackTap,
-    this.onTap,
-    this.icRight,
+    this.actions,
+    this.leading,
   });
 
   @override
@@ -28,32 +26,16 @@ class NewAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppColors.white,
-      title: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: onBackTap,
-              child: SizedBox(
-                width: 24,
-                child: isHome
-                    ? null
-                    : SvgPicture.asset('assets/images/icons/ic_Left-Arrow.svg'),
-              ),
-            ),
-
-            isHome
-                ? SvgPicture.asset("assets/images/logos/Jiburo-text-logo.svg")
-                : Text(titleText!, style: AppFonts.hd2SB),
-
-            GestureDetector(
-              onTap: onTap,
-              child: SizedBox(width: 24, child: icRight),
-            ),
-          ],
-        ),
+      centerTitle: true,
+      title: isHome
+          ? SvgPicture.asset("assets/images/logos/Jiburo-text-logo.svg")
+          : Text(titleText!, style: AppFonts.hd2SB),
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: leading,
       ),
+      actionsPadding: EdgeInsets.only(right: 16),
+      actions: actions,
     );
   }
 }
