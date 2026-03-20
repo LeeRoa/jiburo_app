@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class IconBtn extends StatelessWidget {
@@ -17,6 +18,7 @@ class IconBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTapDown: (details) => SystemSound.play(SystemSoundType.click),
       onTap: onTap,
       child: SizedBox(
         width: width,

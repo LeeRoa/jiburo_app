@@ -1,33 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:jiburo_app/models/find_pets_model.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
 import 'package:jiburo_app/widgets/buttons/icon_btn.dart';
 import 'package:jiburo_app/widgets/buttons/main_btn.dart';
 import 'package:jiburo_app/widgets/input_text_widget.dart';
 
-class FindPetsModel {
-  final String name;
-  final String breeds;
-  final String missingSpot;
-  final String area;
-  final String reward;
-  final String time;
-  final String imgPath;
-  final bool isLike;
-  FindPetsModel({
-    required this.name,
-    required this.breeds,
-    required this.missingSpot,
-    required this.area,
-    required this.reward,
-    required this.time,
-    required this.imgPath,
-    required this.isLike,
-  });
-}
-
 class DraggableScrollableWidget extends StatefulWidget {
-  const DraggableScrollableWidget({super.key});
+  final bool isOnMap;
+  const DraggableScrollableWidget({super.key, required this.isOnMap});
+
   @override
   State<DraggableScrollableWidget> createState() =>
       _DraggableScrollableWidgetState();
@@ -35,9 +17,13 @@ class DraggableScrollableWidget extends StatefulWidget {
 
 class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
   bool isScrolled = false;
-  final DraggableScrollableController sheetController =
+  bool showAddBtn = true;
+  final DraggableScrollableController _sheetController =
       DraggableScrollableController();
   bool isSearchMode = false;
+  double initSize = 0.5;
+  double minSize = 0.1;
+  double maxSize = 1;
 
   final List<FindPetsModel> pets = [
     FindPetsModel(
@@ -135,6 +121,27 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
   @override
   void initState() {
     super.initState();
+    _sheetController.addListener(_sheetListener);
+  }
+
+  void _sheetListener() {
+    final currentSize = _sheetController.size;
+
+    if (currentSize < initSize) {
+      setState(() {
+        showAddBtn = false;
+        isScrolled = false;
+      });
+    } else {
+      setState(() {
+        showAddBtn = true;
+        if (currentSize > initSize) {
+          isScrolled = true;
+        } else if (currentSize <= initSize) {
+          isScrolled = false;
+        }
+      });
+    }
   }
 
   void onTapSearchMode() {
@@ -144,32 +151,34 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
   }
 
   @override
+  void dispose() {
+    _sheetController.removeListener(_sheetListener);
+    _sheetController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     final height = media.size.height;
     final safeHeight = height - media.padding.top - media.padding.bottom;
 
-    final minSize = 380 / safeHeight; // 실제 픽셀 기준으로 비율 계산
+    initSize = 350 / safeHeight; // 실제 픽셀 기준으로 비율 계산
+    minSize = 88 / safeHeight; // 실제 픽셀 기준으로 비율 계산
 
-    sheetController.addListener(() {
-      final currentSize = sheetController.size;
-
-      if (currentSize > minSize && !isScrolled) {
-        setState(() {
-          isScrolled = true;
-        });
-      } else if (currentSize == minSize && isScrolled) {
-        setState(() {
-          isScrolled = false;
-        });
-      }
-    });
+    if (widget.isOnMap) {
+      _sheetController.animateTo(
+        minSize,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
+    }
 
     return DraggableScrollableSheet(
-      controller: sheetController,
-      initialChildSize: minSize,
+      controller: _sheetController,
+      initialChildSize: initSize,
       minChildSize: minSize,
-      maxChildSize: 1,
+      maxChildSize: maxSize,
       builder: (BuildContext context, ScrollController scrollController) {
         return Stack(
           children: [
@@ -283,18 +292,19 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                 ),
               ),
             ),
-            Positioned(
-              right: 16,
-              bottom: 14,
-              child: MainBtn(
-                btnName: '등록하기',
-                icLeft: 'assets/images/icons/ic_Plus.svg',
-                isIconOnly: isScrolled,
-                resizeBorderRadius: 40,
-                size: Size.medium,
-                onTap: () {},
+            if (showAddBtn)
+              Positioned(
+                right: 16,
+                bottom: 14,
+                child: MainBtn(
+                  btnName: '등록하기',
+                  icLeft: 'assets/images/icons/ic_Plus.svg',
+                  isIconOnly: isScrolled,
+                  resizeBorderRadius: 40,
+                  size: Size.medium,
+                  onTap: () {},
+                ),
               ),
-            ),
           ],
         );
       },

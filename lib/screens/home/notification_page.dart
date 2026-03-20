@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jiburo_app/routes/app_paths.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
+import 'package:jiburo_app/widgets/buttons/custom_back_btn.dart';
 import 'package:jiburo_app/widgets/buttons/icon_btn.dart';
 import 'package:jiburo_app/widgets/new_app_bar.dart';
 
@@ -39,7 +41,7 @@ class _NotificationPageState extends State<NotificationPage> {
       appBar: NewAppBar(
         isHome: false,
         titleText: '알림',
-        leading: BackButton(color: AppColors.neutral30),
+        leading: CustomBackBtn(backPath: AppPaths.home),
         actions: [
           IconBtn(onTap: () {}, iconPath: 'assets/images/icons/ic_Etc.svg'),
         ],

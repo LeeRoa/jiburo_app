@@ -27,14 +27,18 @@ class NewAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: AppColors.white,
       centerTitle: true,
+      // 스크롤시 색상 변하지 않도록
+      surfaceTintColor: Colors.transparent,
       title: isHome
           ? SvgPicture.asset("assets/images/logos/Jiburo-text-logo.svg")
           : Text(titleText!, style: AppFonts.hd2SB),
+      leadingWidth: 24 + 16,
+      automaticallyImplyLeading: false,
       leading: Padding(
         padding: const EdgeInsets.only(left: 16),
         child: leading,
       ),
-      actionsPadding: EdgeInsets.only(right: 16),
+      actionsPadding: EdgeInsets.all(16),
       actions: actions,
     );
   }

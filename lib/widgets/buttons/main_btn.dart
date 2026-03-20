@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
@@ -98,7 +99,10 @@ class _MainBtnState extends State<MainBtn> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapDown: (_) {
+        SystemSound.play(SystemSoundType.click);
+        setState(() => _isPressed = true);
+      },
       onTapUp: (_) => setState(() => _isPressed = false),
       onTapCancel: () => setState(() => _isPressed = false),
       onTap: widget.onTap,

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jiburo_app/screens/home/home_tab.dart';
-import 'package:jiburo_app/screens/loading_page.dart';
-import 'package:jiburo_app/screens/login/login_page.dart';
-import 'package:jiburo_app/screens/message_page.dart';
-import 'package:jiburo_app/screens/save_page.dart';
-import 'package:jiburo_app/widgets/main_layout.dart';
+import 'package:jiburo_app/routes/app_router.dart';
+import 'package:jiburo_app/screens/not_found_page.dart';
+import 'package:jiburo_app/screens/splash_loading_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -20,23 +18,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool isLogin = true;
 
-  int onTabBar(int value) {
-    return value;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       theme: ThemeData(fontFamily: "Pretendard"),
-      // home: LoadingPage(),
-      home: isLogin
-          ? MainLayout(child: [HomeTab(), MessagePage(), SavePage()])
-          : LoginPage(),
+      routerConfig: appRouter,
     );
+    // return MaterialApp(
+    //   theme: ThemeData(fontFamily: "Pretendard"),
+    //
+    //   home: NotFoundPage(),
+    // );
   }
 }

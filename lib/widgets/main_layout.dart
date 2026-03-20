@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/models/tab_item_model.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class MainLayout extends StatefulWidget {
-  final List<Widget> child;
-  const MainLayout({super.key, required this.child});
+  // final List<Widget> child;
+  final StatefulNavigationShell navigationShell;
+  const MainLayout({super.key, required this.navigationShell});
 
   @override
   State<MainLayout> createState() => _MainLayoutState();
 }
 
 class _MainLayoutState extends State<MainLayout> {
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
+  // late final StatefulNavigationShell navigationShell;
   // int? _animatingIndex;
 
   final List<TabItemModel> tabs = [
@@ -49,8 +52,8 @@ class _MainLayoutState extends State<MainLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: IndexedStack(index: _selectedIndex, children: widget.child),
-
+      // body: IndexedStack(index: _selectedIndex, children: widget.child),
+      body: widget.navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -78,14 +81,16 @@ class _MainLayoutState extends State<MainLayout> {
             unselectedLabelStyle: AppFonts.c2M,
             showSelectedLabels: true,
             showUnselectedLabels: true,
-            onTap: (value) {
-              if (_selectedIndex != value) {
-                setState(() {
-                  _selectedIndex = value;
-                });
-              }
-            },
-            currentIndex: _selectedIndex,
+            // onTap: (value) {
+            //   if (_selectedIndex != value) {
+            //     setState(() {
+            //       _selectedIndex = value;
+            //     });
+            //   }
+            // },
+            // currentIndex: _selectedIndex,
+            currentIndex: widget.navigationShell.currentIndex,
+            onTap: (index) => widget.navigationShell.goBranch(index),
             items: tabs
                 .map(
                   (tab) => BottomNavigationBarItem(

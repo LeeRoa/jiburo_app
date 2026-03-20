@@ -13,6 +13,32 @@ dependencies:
   cupertino_icons: ^1.0.8
   lottie: ^3.3.2
   fluttertoast: ^9.0.0
+  permission_handler: ^12.0.1
+  http: ^1.6.0
+  # 카카오맵
+  kakao_map_sdk: ^1.2.5
+  # 카카오 sdk 설정 패키지
+  kakao_flutter_sdk_common: ^1.10.0
+  # 웹뷰 패키지
+  flutter_inappwebview: ^6.1.5
+  # 위치 확인 패키지
+  geolocator: ^14.0.2
+  # 나침반
+  flutter_compass: ^0.8.1
+  # 초기진입 스플래쉬 설정
+  flutter_native_splash: ^2.4.7
+  go_router: ^17.1.0
+
+flutter_native_splash:
+  image: assets/images/logos/Logo-Vertical.png
+  color: "#FFFFFF"
+  android: true
+  ios: true
+
+  # 사이즈 조절
+  android_gravity: center
+  ios_content_mode: center
+  fullscreen: true  # 전체화면
 
 dev_dependencies:
   flutter_test:
