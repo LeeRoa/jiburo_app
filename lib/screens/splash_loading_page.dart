@@ -44,11 +44,7 @@ class _SplashLoadingPageState extends State<SplashLoadingPage> {
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
-    Position position = await Geolocator.getCurrentPosition(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.medium),
-    );
 
-    // 위치 권한 확인
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
@@ -57,6 +53,11 @@ class _SplashLoadingPageState extends State<SplashLoadingPage> {
         permission == LocationPermission.deniedForever) {
       return;
     }
+
+    // 권한 확인 후 위치 요청
+    Position position = await Geolocator.getCurrentPosition(
+      locationSettings: LocationSettings(accuracy: LocationAccuracy.medium),
+    );
 
     LocationState.lat = position.latitude;
     LocationState.lng = position.longitude;

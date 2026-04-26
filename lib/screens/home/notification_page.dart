@@ -9,8 +9,9 @@ import 'package:jiburo_app/widgets/new_app_bar.dart';
 class DemoModel {
   final String content;
   final bool isNew;
+  final bool hasImg;
 
-  DemoModel({required this.content, required this.isNew});
+  DemoModel({required this.content, required this.isNew, this.hasImg = false});
 }
 
 class NotificationPage extends StatefulWidget {
@@ -24,16 +25,61 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     final List<DemoModel> items = [
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
-      DemoModel(content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.", isNew: true),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: false,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: true,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: false,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: true,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: true,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: false,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: false,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: false,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: false,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: false,
+      ),
+      DemoModel(
+        content: "알림의 내용이 들어갑니다. 내용이 길어지면 다음 줄로 넘어가요.",
+        isNew: true,
+        hasImg: false,
+      ),
     ];
 
     return Scaffold(
@@ -70,6 +116,7 @@ Widget _buildItems(DemoModel item) {
     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 32),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       spacing: 8,
       children: [
         Row(
@@ -87,13 +134,47 @@ Widget _buildItems(DemoModel item) {
             ),
           ],
         ),
-        Text(item.content, style: AppFonts.l1rM),
-        Text(
-          '날짜 또는 부가 정보',
-          style: AppFonts.c1R.copyWith(color: AppColors.neutral60),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // spacing: 16,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8,
+              children: [
+                SizedBox(
+                  width: 218,
+                  child: Text(
+                    item.content,
+                    style: AppFonts.l1rM,
+                    softWrap: true,
+                  ),
+                ),
+                Text(
+                  '날짜 또는 부가 정보',
+                  style: AppFonts.c1R.copyWith(color: AppColors.neutral60),
+                ),
+              ],
+            ),
+
+            if (item.hasImg)
+              Container(
+                width: 72,
+                height: 72,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Image.asset('assets/images/check.png'),
+              ),
+          ],
         ),
+        SizedBox(height: 8),
+
         Container(
           width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 8),
           height: 1,
           decoration: BoxDecoration(color: AppColors.neutral95),
         ),

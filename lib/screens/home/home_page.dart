@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/routes/app_paths.dart';
 import 'package:jiburo_app/screens/home/kakao_map_page.dart';
 import 'package:jiburo_app/widgets/buttons/icon_btn.dart';
-import 'package:jiburo_app/widgets/home/draggable_scrollable_Widget.dart';
+import 'package:jiburo_app/widgets/home/bottom-sheet/draggable_scrollable_widget.dart';
 import 'package:jiburo_app/widgets/new_app_bar.dart';
 import 'package:jiburo_app/widgets/plain_layout.dart';
 

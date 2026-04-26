@@ -34,32 +34,30 @@ class _InputTextWidgetState extends State<InputTextWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: TextFormField(
-        focusNode: focusNode,
-        decoration: InputDecoration(
-          hintText: widget.placeHolder,
-          hintStyle: AppFonts.b2nM.copyWith(color: AppColors.neutral90),
-          suffixIconConstraints: BoxConstraints(minWidth: 22, minHeight: 22),
-          suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: IconBtn(
-              iconPath: 'assets/images/icons/ic_Cancel.svg',
-              onTap: () {},
-            ),
+    return TextFormField(
+      focusNode: focusNode,
+      decoration: InputDecoration(
+        hintText: widget.placeHolder,
+        hintStyle: AppFonts.b2nM.copyWith(color: AppColors.neutral90),
+        suffixIconConstraints: BoxConstraints(minWidth: 22, minHeight: 22),
+        suffixIcon: Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: IconBtn(
+            iconPath: 'assets/images/icons/ic_Cancel.svg',
+            onTap: () {},
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: AppColors.neutral20),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: AppColors.neutral20),
-          ),
-          contentPadding: EdgeInsetsGeometry.symmetric(
-            horizontal: 16,
-            vertical: 13,
-          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.neutral20),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.neutral20),
+        ),
+        contentPadding: EdgeInsetsGeometry.symmetric(
+          horizontal: 16,
+          vertical: 13,
         ),
       ),
     );

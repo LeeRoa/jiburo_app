@@ -24,7 +24,8 @@ class NotFoundPage extends StatelessWidget {
               children: [
                 SvgPicture.asset('assets/images/404.svg'),
                 LottieBuilder.asset(
-                  'assets/lottie/not-found.json',
+                  'assets/lottie/Loader cat.json',
+                  frameRate: FrameRate.composition,
                   width: 250,
                   height: 250,
                 ),
