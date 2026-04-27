@@ -7,7 +7,6 @@ import 'package:jiburo_app/styles/fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class MainLayout extends StatefulWidget {
-  // final List<Widget> child;
   final StatefulNavigationShell navigationShell;
   const MainLayout({super.key, required this.navigationShell});
 
@@ -16,10 +15,6 @@ class MainLayout extends StatefulWidget {
 }
 
 class _MainLayoutState extends State<MainLayout> with TickerProviderStateMixin {
-  // int _selectedIndex = 0;
-  // late final StatefulNavigationShell navigationShell;
-  // int? _animatingIndex;
-
   late final List<AnimationController> _controllers;
 
   final List<TabItemModel> tabs = [
@@ -81,7 +76,6 @@ class _MainLayoutState extends State<MainLayout> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      // body: IndexedStack(index: _selectedIndex, children: widget.child),
       body: widget.navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -110,14 +104,6 @@ class _MainLayoutState extends State<MainLayout> with TickerProviderStateMixin {
             unselectedLabelStyle: AppFonts.c2M,
             showSelectedLabels: true,
             showUnselectedLabels: true,
-            // onTap: (value) {
-            //   if (_selectedIndex != value) {
-            //     setState(() {
-            //       _selectedIndex = value;
-            //     });
-            //   }
-            // },
-            // currentIndex: _selectedIndex,
             currentIndex: widget.navigationShell.currentIndex,
             onTap: (index) {
               _controllers[index]

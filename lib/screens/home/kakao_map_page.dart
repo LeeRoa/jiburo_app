@@ -32,6 +32,9 @@ class _KakaoMapPageState extends State<KakaoMapPage> {
   double _heading = 0;
   Poi? myLocationPoi;
 
+  StreamSubscription? _positionStream;
+  StreamSubscription? _compassStream;
+
   double _smoothHeading = 0; // 부드러운 값
   DateTime? _lastRotateTime;
 
@@ -87,14 +90,19 @@ class _KakaoMapPageState extends State<KakaoMapPage> {
     super.initState();
 
     // GPS 실시간 스트림
-    Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-    ).listen((position) async {
-      final newPos = LatLng(position.latitude, position.longitude);
-      setState(() => myPos = newPos);
-    });
+    _positionStream =
+        Geolocator.getPositionStream(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+          ),
+        ).listen((position) async {
+          if (!mounted) {
+            final newPos = LatLng(position.latitude, position.longitude);
+            setState(() => myPos = newPos);
+          }
+        });
 
-    FlutterCompass.events?.listen((event) {
+    _compassStream = FlutterCompass.events?.listen((event) {
       if (!mounted) return;
       double raw = event.heading ?? 0;
 
@@ -115,6 +123,8 @@ class _KakaoMapPageState extends State<KakaoMapPage> {
 
   @override
   void dispose() {
+    _positionStream?.cancel();
+    _compassStream?.cancel();
     super.dispose();
   }
 

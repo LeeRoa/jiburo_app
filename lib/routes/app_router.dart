@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/routes/app_paths.dart';
 import 'package:jiburo_app/screens/home/home_page.dart';
+import 'package:jiburo_app/screens/missing/missing_detail_page.dart';
 import 'package:jiburo_app/screens/home/notification_page.dart';
 import 'package:jiburo_app/screens/login/login_page.dart';
 import 'package:jiburo_app/screens/message_page.dart';
@@ -19,18 +20,20 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => SplashLoadingPage(),
     ),
     GoRoute(path: AppPaths.login, builder: (context, state) => LoginPage()),
+    GoRoute(
+      path: AppPaths.notify,
+      builder: (context, state) => NotificationPage(),
+    ),
+    goRoute(
+      path: AppPaths.info,
+      builder: (id) => MissingDetailPage(id: id!),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return MainLayout(navigationShell: navigationShell);
       },
       branches: [
-        statefulShellBranch(
-          path: AppPaths.home,
-          page: HomePage(),
-          sub: [
-            goRoute(path: AppPaths.notify, builder: (_) => NotificationPage()),
-          ],
-        ),
+        statefulShellBranch(path: AppPaths.home, page: HomePage()),
         statefulShellBranch(
           path: AppPaths.message,
           page: MessagePage(),

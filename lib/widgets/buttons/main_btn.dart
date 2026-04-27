@@ -19,16 +19,25 @@ enum Variant {
     bgColor: AppColors.white,
     pressedColor: AppColors.interactionRed,
     textColor: AppColors.point50,
+    borderColor: AppColors.point50,
+  ),
+  outlineDark(
+    bgColor: AppColors.white,
+    pressedColor: AppColors.neutral80,
+    textColor: AppColors.black,
+    borderColor: AppColors.neutral60,
   );
 
   final Color bgColor;
   final Color textColor;
   final Color pressedColor;
+  final Color? borderColor;
 
   const Variant({
     required this.bgColor,
     required this.textColor,
     required this.pressedColor,
+    this.borderColor,
   });
 }
 
@@ -84,6 +93,7 @@ class _MainBtnState extends State<MainBtn> {
   Color get btnBgColor => widget.variant.bgColor;
   Color get btnTextColor => widget.variant.textColor;
   Color get pressedColor => widget.variant.pressedColor;
+  Color get borderColor => widget.variant.borderColor!;
 
   TextStyle get font {
     switch (widget.size) {
@@ -98,6 +108,10 @@ class _MainBtnState extends State<MainBtn> {
 
   @override
   Widget build(BuildContext context) {
+    final verticalPd = widget.variant != Variant.outline
+        ? widget.size.verticalPd + 1
+        : widget.size.verticalPd;
+
     return GestureDetector(
       onTapDown: (_) {
         SystemSound.play(SystemSoundType.click);
@@ -112,9 +126,9 @@ class _MainBtnState extends State<MainBtn> {
 
         constraints: BoxConstraints(minHeight: 32, maxHeight: 48),
         padding: widget.isIconOnly
-            ? EdgeInsets.all(widget.size.verticalPd)
+            ? EdgeInsets.all(verticalPd)
             : EdgeInsets.symmetric(
-                vertical: widget.size.verticalPd,
+                vertical: verticalPd,
                 horizontal: widget.size.horizontalPd,
               ),
         decoration: BoxDecoration(
@@ -126,12 +140,18 @@ class _MainBtnState extends State<MainBtn> {
           borderRadius: BorderRadius.circular(
             widget.resizeBorderRadius > 0
                 ? widget.resizeBorderRadius
-                : Variant.primary == widget.variant
-                ? 12
-                : 10,
+                : Size.medium == widget.size
+                ? 10
+                : 12,
           ),
-          border: widget.variant == Variant.outline
-              ? Border.all(color: _isPressed ? pressedColor : AppColors.point50)
+          border:
+              (widget.variant == Variant.outline ||
+                  widget.variant == Variant.outlineDark)
+              ? Border.all(
+                  color: _isPressed
+                      ? pressedColor
+                      : widget.variant.borderColor!,
+                )
               : null,
         ),
         child: Row(

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jiburo_app/routes/app_router.dart';
-import 'package:jiburo_app/screens/not_found_page.dart';
-import 'package:jiburo_app/screens/splash_loading_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -24,10 +23,5 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(fontFamily: "Pretendard"),
       routerConfig: appRouter,
     );
-    // return MaterialApp(
-    //   theme: ThemeData(fontFamily: "Pretendard"),
-    //
-    //   home: NotFoundPage(),
-    // );
   }
 }

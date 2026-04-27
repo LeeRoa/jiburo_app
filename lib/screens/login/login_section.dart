@@ -13,7 +13,7 @@ class LoginSection extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text("서비스 시작하기", style: AppFonts.hd1SB),
+            Text("서비스 시작하기", style: AppFonts.hd1B),
             SizedBox(height: 20),
             SocialLoginButtons(),
           ],

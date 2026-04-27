@@ -26,22 +26,22 @@ class AppFonts {
   static TextStyle get t2R => _t2.regular;
 
   static final _hd1 = _style(22, 30, -0.0194);
-  static TextStyle get hd1SB => _hd1.semiBold;
+  static TextStyle get hd1B => _hd1.bold;
   static TextStyle get hd1M => _hd1.medium;
   static TextStyle get hd1R => _hd1.regular;
 
   static final _hd2 = _style(20, 28, -0.012);
-  static TextStyle get hd2SB => _hd2.semiBold;
+  static TextStyle get hd2B => _hd2.bold;
   static TextStyle get hd2M => _hd2.medium;
   static TextStyle get hd2R => _hd2.regular;
 
   static final _hl1 = _style(18, 26, -0.002);
-  static TextStyle get hl1SB => _hl1.semiBold;
+  static TextStyle get hl1B => _hl1.bold;
   static TextStyle get hl1M => _hl1.medium;
   static TextStyle get hl1R => _hl1.regular;
 
   static final _hl2 = _style(17, 24, 0);
-  static TextStyle get hl2SB => _hl2.semiBold;
+  static TextStyle get hl2B => _hl2.bold;
   static TextStyle get hl2M => _hl2.medium;
   static TextStyle get hl2R => _hl2.regular;
 

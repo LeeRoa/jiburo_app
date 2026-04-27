@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:jiburo_app/routes/app_paths.dart';
 import 'package:jiburo_app/screens/home/kakao_map_page.dart';
-import 'package:jiburo_app/widgets/buttons/icon_btn.dart';
-import 'package:jiburo_app/widgets/home/bottom-sheet/draggable_scrollable_widget.dart';
-import 'package:jiburo_app/widgets/new_app_bar.dart';
+import 'package:jiburo_app/screens/home/widget/bottom-sheet/draggable_scrollable_widget.dart';
+import 'package:jiburo_app/widgets/app-bar/index_app_bar.dart';
 import 'package:jiburo_app/widgets/plain_layout.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,19 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return PlainLayout(
-      appBar: NewAppBar(
-        isHome: true,
-        actions: [
-          IconBtn(
-            iconPath: isNew
-                ? 'assets/images/icons/ic_status=new.svg'
-                : 'assets/images/icons/ic_status=normal.svg',
-            onTap: () {
-              context.go('/${AppPaths.notify}');
-            },
-          ),
-        ],
-      ),
+      appBar: IndexAppBar(type: AppBarType.home),
       body: Stack(
         children: [
           // 지도 들어갈 자리

@@ -3,8 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/styles/colors.dart';
 
 class CustomBackBtn extends StatelessWidget {
-  final String backPath;
-  const CustomBackBtn({super.key, required this.backPath});
+  const CustomBackBtn({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +12,7 @@ class CustomBackBtn extends StatelessWidget {
       height: 24,
       child: BackButton(
         onPressed: () {
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            context.go(backPath);
-          }
+          context.pop();
         },
         color: AppColors.neutral30,
         style: ButtonStyle(padding: WidgetStateProperty.all(EdgeInsets.zero)),

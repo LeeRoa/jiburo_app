@@ -32,7 +32,7 @@ class _SheetHeader extends State<SheetHeader> {
               children: [
                 Text(
                   '${widget.name}님, 친구들을 찾아\n집으로 보내주세요',
-                  style: AppFonts.hd2SB,
+                  style: AppFonts.hd2B,
                 ),
                 IconBtn(
                   iconPath: 'assets/images/icons/ic_Refresh.svg',

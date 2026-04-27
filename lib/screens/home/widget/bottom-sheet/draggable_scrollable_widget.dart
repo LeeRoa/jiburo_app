@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/models/find_pets_model.dart';
+import 'package:jiburo_app/screens/home/widget/bottom-sheet/sheet_handle_widget.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/widgets/buttons/main_btn.dart';
-import 'package:jiburo_app/widgets/home/bottom-sheet/sheet-handle-widget.dart';
-import 'pet-card.dart';
-import 'sheet-box.dart';
-import 'sheet-header.dart';
+import 'pet_card.dart';
+import 'sheet_box.dart';
+import 'sheet_header.dart';
 
 class DraggableScrollableWidget extends StatefulWidget {
   final bool isOnMap;
@@ -22,11 +23,10 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
   double maxSize = 1.0;
 
   late final ValueNotifier<double> _sheetSize = ValueNotifier(initSize);
-  final DraggableScrollableController _sheetController =
-      DraggableScrollableController();
 
   final List<FindPetsModel> pets = [
     FindPetsModel(
+      id: "1",
       name: '복돌이',
       breeds: '강아지',
       missingSpot: '서울시 강동구 천호동',
@@ -37,6 +37,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: true,
     ),
     FindPetsModel(
+      id: "2",
       name: '아로',
       breeds: '강아지',
       missingSpot: '서울시 강동구 길동',
@@ -47,6 +48,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: false,
     ),
     FindPetsModel(
+      id: "3",
       name: '영숙이',
       breeds: '고양이',
       missingSpot: '서울시 강동구 명일동',
@@ -57,6 +59,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: false,
     ),
     FindPetsModel(
+      id: "4",
       name: '복돌이',
       breeds: '강아지',
       missingSpot: '서울시 강동구 천호동',
@@ -67,6 +70,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: true,
     ),
     FindPetsModel(
+      id: "5",
       name: '아로',
       breeds: '강아지',
       missingSpot: '서울시 강동구 길동',
@@ -77,6 +81,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: false,
     ),
     FindPetsModel(
+      id: "6",
       name: '레이',
       breeds: '고양이',
       missingSpot: '서울시 강동구 고덕동',
@@ -87,6 +92,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: false,
     ),
     FindPetsModel(
+      id: "7",
       name: '복돌이',
       breeds: '강아지',
       missingSpot: '서울시 강동구 천호동',
@@ -97,6 +103,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: true,
     ),
     FindPetsModel(
+      id: "8",
       name: '아로',
       breeds: '강아지',
       missingSpot: '서울시 강동구 길동',
@@ -107,6 +114,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
       isLike: false,
     ),
     FindPetsModel(
+      id: "9",
       name: '레이',
       breeds: '고양이',
       missingSpot: '서울시 강동구 고덕동',
@@ -171,23 +179,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
   Widget build(BuildContext context) {
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
-        final double currSize = notification.extent; // 현재 size
         _sheetSize.value = notification.extent;
-
-        // isFullScroll = currSize == maxSize;
-        // _isFullScroll.value = currSize == maxSize;
-
-        // if (currSize < initSize) {
-        //   expandedAddBtn = false;
-        //   isScrolled = false;
-        // } else {
-        //   expandedAddBtn = true;
-        //   if (currSize > initSize) {
-        //     isScrolled = true;
-        //   } else if (currSize <= initSize) {
-        //     isScrolled = false;
-        //   }
-        // }
 
         return true;
       },
@@ -258,6 +250,8 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                                 itemBuilder: (context, index) => PetCard(
                                   isList: true,
                                   pet: pets[index],
+                                  onMove: () =>
+                                      context.push('/info/${pets[index].id}'),
                                   onSaveTab: () {},
                                 ),
                               ),

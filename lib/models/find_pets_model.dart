@@ -1,4 +1,5 @@
 class FindPetsModel {
+  final String id;
   final String name;
   final String breeds;
   final String missingSpot;
@@ -9,6 +10,7 @@ class FindPetsModel {
   final bool isLike;
 
   FindPetsModel({
+    required this.id,
     required this.name,
     required this.breeds,
     required this.missingSpot,

@@ -5,13 +5,13 @@ import 'package:jiburo_app/styles/fonts.dart';
 
 enum AppBarStatus { notify, map, info }
 
-class NewAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHome;
   final String? titleText;
   final List<Widget>? actions;
   final Widget? leading;
 
-  const NewAppBar({
+  const CustomAppBar({
     super.key,
     required this.isHome,
     this.titleText,
@@ -31,7 +31,7 @@ class NewAppBar extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: Colors.transparent,
       title: isHome
           ? SvgPicture.asset("assets/images/logos/Jiburo-text-logo.svg")
-          : Text(titleText!, style: AppFonts.hd2SB),
+          : Text(titleText!, style: AppFonts.hd2B),
       leadingWidth: 24 + 16,
       automaticallyImplyLeading: false,
       leading: Padding(
