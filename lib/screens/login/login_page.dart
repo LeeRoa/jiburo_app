@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:jiburo_app/screens/login/login_section.dart';
+import 'package:jiburo_app/screens/login/widget/login_section.dart';
 import 'package:jiburo_app/widgets/plain_layout.dart';
 
 class LoginPage extends StatefulWidget {

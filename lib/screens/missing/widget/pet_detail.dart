@@ -10,7 +10,7 @@ class PetDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('${title} : ', style: AppFonts.l1nSB),
+        Text('$title : ', style: AppFonts.l1nSB),
         Text(value, style: AppFonts.l1nM),
       ],
     );

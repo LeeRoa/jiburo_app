@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jiburo_app/screens/login/social_login_buttons.dart';
+import 'package:jiburo_app/screens/login/widget/social_login_buttons.dart';
 import 'package:jiburo_app/styles/fonts.dart';
 
 class LoginSection extends StatelessWidget {
