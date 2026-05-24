@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jiburo_app/models/map_position_model.dart';
 import 'package:jiburo_app/models/searching_info_model.dart';
-import 'package:jiburo_app/screens/missing/widget/count_label.dart';
 import 'package:jiburo_app/screens/missing/widget/missing_spot.dart';
 import 'package:jiburo_app/screens/missing/widget/pet_detail.dart';
 import 'package:jiburo_app/screens/missing/widget/photos_widget.dart';
@@ -45,6 +44,9 @@ class _MissingDetailPageState extends State<MissingDetailPage> {
       date: '2026.04.27',
     ),
   ];
+  final bool isSave = true;
+  final bool isComplete = false;
+  final imgs = ['assets/images/1.jpg', 'assets/images/2.png'];
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +55,8 @@ class _MissingDetailPageState extends State<MissingDetailPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                PhotosWidget(),
-                Positioned(
-                  bottom: 12,
-                  right: 12,
-                  child: CountLabel(count: 1, total: 10),
-                ),
-              ],
-            ),
+            PhotosWidget(imgs: imgs, isComplete: isComplete),
+
             const SizedBox(height: 16),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -123,7 +117,7 @@ class _MissingDetailPageState extends State<MissingDetailPage> {
                     ),
                   ),
                   MissingSpot(
-                    isSave: true,
+                    isShow: isSave && !isComplete,
                     spotAddr: '서울시 강동구 고덕로 210',
                     searchingInfos: infos,
                     onSearch: () {},
@@ -132,8 +126,14 @@ class _MissingDetailPageState extends State<MissingDetailPage> {
               ),
             ),
             BottomActions.full(
-              guideText: '저장 하시면, 최종 실종 위치와 가까워질 때 알람을 보내드릴게요.',
-              mainBtn: MainBtn(btnName: '저장하기', onTap: () {}),
+              guideText: !isSave
+                  ? '저장 하시면, 최종 실종 위치와 가까워질 때 알람을 보내드릴게요.'
+                  : null,
+              mainBtn: MainBtn(
+                btnName: isSave ? '채팅하기' : '저장하기',
+                onTap: () {},
+                isDisabled: isComplete,
+              ),
               subBtn: ShareBtn(onTap: () {}),
             ),
           ],

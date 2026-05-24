@@ -135,7 +135,7 @@ class _MainBtnState extends State<MainBtn> {
           color: _isPressed && widget.variant != Variant.outline
               ? pressedColor
               : widget.isDisabled
-              ? AppColors.white
+              ? AppColors.neutral99
               : btnBgColor,
           borderRadius: BorderRadius.circular(
             widget.resizeBorderRadius > 0

@@ -7,14 +7,14 @@ import 'package:jiburo_app/styles/fonts.dart';
 import 'package:jiburo_app/widgets/buttons/main_btn.dart';
 
 class MissingSpot extends StatelessWidget {
-  final bool isSave;
+  final bool isShow;
   final List<SearchingInfoModel> searchingInfos;
   final String spotAddr;
   final VoidCallback? onSearch;
 
   const MissingSpot({
     super.key,
-    required this.isSave,
+    required this.isShow,
     required this.spotAddr,
     required this.searchingInfos,
     this.onSearch,
@@ -35,7 +35,7 @@ class MissingSpot extends StatelessWidget {
               spacing: 8,
               children: [
                 Text('실종 위치 정보', style: AppFonts.b2nSB),
-                if (isSave)
+                if (isShow)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +57,7 @@ class MissingSpot extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   height: 160,
-                  margin: isSave ? null : EdgeInsets.only(bottom: 11),
+                  margin: isShow ? null : EdgeInsets.only(bottom: 11),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.black.withValues(alpha: 0.6),
@@ -69,7 +69,7 @@ class MissingSpot extends StatelessWidget {
                 ),
               ],
             ),
-            if (isSave && search != null)
+            if (isShow && search != null)
               SizedBox(
                 width: double.infinity,
                 child: MainBtn(
@@ -80,7 +80,7 @@ class MissingSpot extends StatelessWidget {
               ),
           ],
         ),
-        if (isSave)
+        if (isShow)
           Container(
             margin: EdgeInsets.only(bottom: 49),
             child: ListView.builder(

@@ -131,32 +131,6 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     super.initState();
   }
 
-  // void _sheetListener() {
-  //   final currentSize = _sheetController.size;
-  //
-  //   if (currentSize < initSize) {
-  //     setState(() {
-  //       expandedAddBtn = false;
-  //       isScrolled = false;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       expandedAddBtn = true;
-  //       if (currentSize > initSize) {
-  //         isScrolled = true;
-  //       } else if (currentSize <= initSize) {
-  //         isScrolled = false;
-  //       }
-  //     });
-  //   }
-  //
-  //   print(currentSize);
-  //
-  //   setState(() {
-  //     isFullScroll = currentSize == maxSize;
-  //   });
-  // }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -234,11 +208,15 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                                   child: Column(
                                     children: [
                                       SheetHandleWidget(),
-                                      SheetHeader(name: '지호', onRefresh: () {}),
+                                      // SheetHeader(name: '지호', onRefresh: () {}),
                                     ],
                                   ),
                                 ),
                               ),
+                            ),
+
+                            SliverToBoxAdapter(
+                              child: SheetHeader(name: '지호', onRefresh: () {}),
                             ),
 
                             SliverPadding(
@@ -299,9 +277,9 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 218.0; // 제목 영역의 높이
+  double get maxExtent => 44.0; // 제목 영역의 높이
   @override
-  double get minExtent => 218.0; // 고정되었을 때의 높이
+  double get minExtent => 44.0; // 고정되었을 때의 높이
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
