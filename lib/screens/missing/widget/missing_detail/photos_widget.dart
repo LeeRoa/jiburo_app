@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jiburo_app/screens/missing/widget/complete_cover.dart';
-import 'package:jiburo_app/screens/missing/widget/count_label.dart';
+import 'package:jiburo_app/screens/missing/widget/missing_detail/complete_cover.dart';
+import 'package:jiburo_app/screens/missing/widget/missing_detail/count_label.dart';
 
 class PhotosWidget extends StatefulWidget {
   final bool isComplete;

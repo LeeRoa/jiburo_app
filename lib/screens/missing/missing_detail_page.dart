@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jiburo_app/models/map_position_model.dart';
 import 'package:jiburo_app/models/searching_info_model.dart';
-import 'package:jiburo_app/screens/missing/widget/missing_spot.dart';
-import 'package:jiburo_app/screens/missing/widget/pet_detail.dart';
-import 'package:jiburo_app/screens/missing/widget/photos_widget.dart';
+import 'package:jiburo_app/screens/missing/widget/missing_detail/missing_spot.dart';
+import 'package:jiburo_app/screens/missing/widget/missing_detail/pet_detail.dart';
+import 'package:jiburo_app/screens/missing/widget/missing_detail/photos_widget.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
 import 'package:jiburo_app/widgets/app-bar/index_app_bar.dart';

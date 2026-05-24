@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/routes/app_paths.dart';
 import 'package:jiburo_app/screens/home/home_page.dart';
+import 'package:jiburo_app/screens/missing/add_missing_page.dart';
 import 'package:jiburo_app/screens/missing/missing_detail_page.dart';
 import 'package:jiburo_app/screens/home/notification_page.dart';
 import 'package:jiburo_app/screens/login/login_page.dart';
-import 'package:jiburo_app/screens/message_page.dart';
+import 'package:jiburo_app/screens/message/message_page.dart';
 import 'package:jiburo_app/screens/not_found_page.dart';
 import 'package:jiburo_app/screens/save_page.dart';
 import 'package:jiburo_app/screens/splash_loading_page.dart';
@@ -27,6 +28,10 @@ final GoRouter appRouter = GoRouter(
     goRoute(
       path: AppPaths.info,
       builder: (id) => MissingDetailPage(id: id!),
+    ),
+    GoRoute(
+      path: AppPaths.addMissing,
+      builder: (context, state) => AddMissingPage(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

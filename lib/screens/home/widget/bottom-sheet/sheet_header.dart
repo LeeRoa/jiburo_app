@@ -47,15 +47,13 @@ class _SheetHeader extends State<SheetHeader> {
             child: InputTextWidget(placeHolder: '지역명/이름을 검색해보세요'),
           ),
           const SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsetsGeometry.symmetric(horizontal: 16),
-            child: Row(
-              spacing: 8,
-              children: [
-                TabWidget(isActive: true, onTap: () => {}),
-                TabWidget(isActive: false, onTap: () => {}),
-              ],
-            ),
+          TabWidget(
+            firstLabel: '거리순',
+            firstIsActive: true,
+            firstOnTap: () {},
+            secondLabel: '최신순',
+            secondIsActive: false,
+            secondOnTap: () {},
           ),
           const SizedBox(height: 8),
         ],

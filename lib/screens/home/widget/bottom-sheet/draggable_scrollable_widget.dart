@@ -249,7 +249,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                           isIconOnly: isScrolled,
                           resizeBorderRadius: 40,
                           size: Size.medium,
-                          onTap: () {},
+                          onTap: () => context.push('/add'),
                         ),
                       ),
                   ],

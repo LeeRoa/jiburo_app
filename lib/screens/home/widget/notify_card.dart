@@ -71,7 +71,7 @@ class _NotifyCardState extends State<NotifyCard> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
-                  child: Image.asset('assets/images/check.png'),
+                  child: Image.asset('assets/images/empty-img.png'),
                 ),
             ],
           ),

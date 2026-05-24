@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiburo_app/models/searching_info_model.dart';
-import 'package:jiburo_app/screens/missing/widget/searching_card.dart';
+import 'package:jiburo_app/screens/missing/widget/missing_detail/searching_card.dart';
 import 'package:jiburo_app/styles/colors.dart';
 import 'package:jiburo_app/styles/fonts.dart';
 import 'package:jiburo_app/widgets/buttons/main_btn.dart';

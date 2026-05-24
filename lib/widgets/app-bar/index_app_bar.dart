@@ -7,7 +7,7 @@ import 'package:jiburo_app/widgets/app-bar/custom_app_bar.dart';
 import 'package:jiburo_app/widgets/buttons/custom_back_btn.dart';
 import 'package:jiburo_app/widgets/buttons/icon_btn.dart';
 
-enum AppBarType { home, detail, sub, notify }
+enum AppBarType { home, detail, sub, notify, subNotify }
 
 class IndexAppBar extends StatelessWidget implements PreferredSizeWidget {
   final AppBarType type;
@@ -22,6 +22,7 @@ class IndexAppBar extends StatelessWidget implements PreferredSizeWidget {
       AppBarType.detail => _DetailAppBar(onTap: onMenu!, title: title!),
       AppBarType.sub => _SubAppBar(title: title!, onTap: onMenu!),
       AppBarType.notify => _NotifyAppBar(title: title!),
+      AppBarType.subNotify => _SubNotifyAppBar(title: title!),
     };
   }
 
@@ -83,6 +84,31 @@ class _SubAppBar extends StatelessWidget {
       titleText: title,
       actions: [
         IconBtn(onTap: onTap, iconPath: 'assets/images/icons/ic_Etc.svg'),
+      ],
+    );
+  }
+}
+
+// 뒤로가기 + 타이틀 + 알림버튼
+class _SubNotifyAppBar extends ConsumerWidget {
+  final String title;
+  const _SubNotifyAppBar({required this.title});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isNew = ref.watch(notificationProvider);
+    return CustomAppBar(
+      isHome: false,
+      titleText: title,
+      actions: [
+        IconBtn(
+          iconPath: isNew
+              ? 'assets/images/icons/ic_status=new.svg'
+              : 'assets/images/icons/ic_status=normal.svg',
+          onTap: () {
+            context.push(AppPaths.notify);
+          },
+        ),
       ],
     );
   }

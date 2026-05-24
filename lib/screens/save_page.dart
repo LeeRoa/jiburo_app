@@ -9,6 +9,7 @@ class SavePage extends StatelessWidget {
     return const EmptyWidget(
       text: '찾아줄 친구를 저장해주세요',
       imgPath: 'assets/images/heart.png',
+      btnText: '찾아주러 가기',
     );
   }
 }
