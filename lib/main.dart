@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jiburo_app/routes/app_router.dart';
+
+import 'core/routes/app_router.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
