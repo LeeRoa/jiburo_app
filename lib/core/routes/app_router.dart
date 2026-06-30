@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/core/routes/app_paths.dart';
 import 'package:jiburo_app/core/views/widgets/main_layout.dart';
+import 'package:jiburo_app/features/chat/views/message_detail_screen.dart';
 import 'package:jiburo_app/features/chat/views/message_screen.dart';
 import 'package:jiburo_app/features/home/views/home_screen.dart';
 import 'package:jiburo_app/features/lost_post/views/add_post_screen.dart';
@@ -11,6 +12,7 @@ import 'package:jiburo_app/features/auth/views/login_screen.dart';
 import 'package:jiburo_app/core/views/not_found_screen.dart';
 import 'package:jiburo_app/core/views/save_screen.dart';
 import 'package:jiburo_app/core/views/splash_loading_screen.dart';
+import 'package:jiburo_app/features/user/views/my_page_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppPaths.splash,
@@ -26,12 +28,16 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => NotificationScreen(),
     ),
     goRoute(
-      path: AppPaths.info,
+      path: AppPaths.postDetailPath,
       builder: (id) => PostDetailScreen(id: id!),
     ),
     GoRoute(
-      path: AppPaths.addMissing,
+      path: AppPaths.addPost,
       builder: (context, state) => AddPostScreen(),
+    ),
+    goRoute(
+      path: '${AppPaths.message}/:id',
+      builder: (id) => MessageDetailScreen(id: id!),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -39,21 +45,22 @@ final GoRouter appRouter = GoRouter(
       },
       branches: [
         statefulShellBranch(path: AppPaths.home, page: HomeScreen()),
-        statefulShellBranch(
-          path: AppPaths.message,
-          page: MessageScreen(),
-          sub: [
-            goRoute(
-              path: '${AppPaths.message}/:id',
-              builder: (id) => Container(),
-            ),
-          ],
-        ),
+        statefulShellBranch(path: AppPaths.message, page: MessageScreen()),
         statefulShellBranch(
           path: AppPaths.save,
           page: SaveScreen(),
           sub: [
             goRoute(path: '${AppPaths.save}/:id', builder: (id) => Container()),
+          ],
+        ),
+        statefulShellBranch(
+          path: AppPaths.profile,
+          page: MyPageScreen(),
+          sub: [
+            goRoute(
+              path: '${AppPaths.profile}/:id',
+              builder: (id) => Container(),
+            ),
           ],
         ),
       ],

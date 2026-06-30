@@ -20,6 +20,8 @@ dependencies:
   kakao_map_sdk: ^1.2.5
   # 카카오 sdk 설정 패키지
   kakao_flutter_sdk_common: ^1.10.0
+  # 로그인 웹뷰
+  flutter_web_auth_2: ^5.0.3
   # 웹뷰 패키지
   flutter_inappwebview: ^6.1.5
   # 위치 확인 패키지
@@ -32,9 +34,13 @@ dependencies:
   go_router: ^17.1.0
   # api 설정
   dio: ^5.9.2
-  http: ^1.6.0
   # 상태관리
-  flutter_riverpod: ^3.3.1
+  flutter_riverpod: ^2.6.1
+  # 토큰 저장
+  flutter_secure_storage: ^10.3.1
+
+  # json_annotation 코드 생성기 (build_runner로 실행)
+  json_annotation: ^4.12.0
 
 flutter_native_splash:
   image: assets/images/logos/Logo-Vertical.png
@@ -51,6 +57,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+  # JSON ↔ Dart 모델 변환 코드 자동 생성 (fromJson/toJson 보일러플레이트 제거)
+  json_serializable: ^6.14.0
+  # Json annotation 실행
+  build_runner: ^2.15.0
 
 flutter:
   uses-material-design: true

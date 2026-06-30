@@ -42,10 +42,10 @@ class _MainLayoutState extends State<MainLayout> with TickerProviderStateMixin {
       lottiePath: 'assets/lottie/profile-icon.json',
       // activeIconPath: 'assets/images/icons/tab-bar/ic_Profile=Active.svg',
     ),
-    TabItemModel(
-      label: '메뉴',
-      iconPath: 'assets/images/icons/tab-bar/ic_Menu.svg',
-    ),
+    // TabItemModel(
+    //   label: '메뉴',
+    //   iconPath: 'assets/images/icons/tab-bar/ic_Menu.svg',
+    // ),
   ];
 
   @override

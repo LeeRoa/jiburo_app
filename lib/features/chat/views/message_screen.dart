@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jiburo_app/core/routes/app_paths.dart';
 import 'package:jiburo_app/core/views/widgets/app-bar/index_app_bar.dart';
 import 'package:jiburo_app/core/views/widgets/empty_widget.dart';
 import 'package:jiburo_app/core/views/widgets/plain_layout.dart';
 import 'package:jiburo_app/core/views/widgets/tabs/tab_widget.dart';
 import 'package:jiburo_app/models/chat_list_model.dart';
 
-import 'widget/chat_box.dart';
+import 'widget/chat_room_card.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({super.key});
@@ -83,7 +85,14 @@ class _MessageScreenState extends State<MessageScreen> {
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
                     itemBuilder: (context, index) {
-                      return ChatBox(chat: _filteredChats[index]);
+                      return ChatRoomCard(
+                        chat: _filteredChats[index],
+                        onMove: () {
+                          context.push(
+                            AppPaths.messageDetail(_filteredChats[index].id),
+                          );
+                        },
+                      );
                     },
                   ),
                 ),

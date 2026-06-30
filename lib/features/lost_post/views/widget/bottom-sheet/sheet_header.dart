@@ -44,7 +44,7 @@ class _SheetHeader extends State<SheetHeader> {
           SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: InputTextWidget(placeHolder: '지역명/이름을 검색해보세요'),
+            child: InputTextWidget(placeHolder: '지역명/이름을 검색해보세요', onTap: () {}),
           ),
           const SizedBox(height: 24),
           TabWidget(

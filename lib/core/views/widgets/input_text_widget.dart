@@ -5,7 +5,14 @@ import 'package:jiburo_app/core/views/widgets/buttons/icon_btn.dart';
 
 class InputTextWidget extends StatefulWidget {
   final String placeHolder;
-  const InputTextWidget({super.key, required this.placeHolder});
+  final Function() onTap;
+  final bool isChat;
+  const InputTextWidget({
+    super.key,
+    required this.placeHolder,
+    required this.onTap,
+    this.isChat = false,
+  });
 
   @override
   State<InputTextWidget> createState() => _InputTextWidgetState();
@@ -41,24 +48,22 @@ class _InputTextWidgetState extends State<InputTextWidget> {
         hintStyle: AppFonts.b2nM.copyWith(color: AppColors.neutral90),
         suffixIconConstraints: BoxConstraints(minWidth: 22, minHeight: 22),
         suffixIcon: Padding(
-          padding: const EdgeInsets.only(right: 16),
+          padding: EdgeInsets.only(right: 16),
           child: IconBtn(
-            iconPath: 'assets/images/icons/ic_Cancel.svg',
-            onTap: () {},
+            iconPath:
+                'assets/images/icons/${widget.isChat ? 'ic_Emoji' : 'ic_Cancel'}.svg',
+            onTap: widget.onTap,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.neutral20),
+          borderSide: BorderSide(color: AppColors.neutral90),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColors.neutral20),
+          borderSide: BorderSide(color: AppColors.neutral90),
         ),
-        contentPadding: EdgeInsetsGeometry.symmetric(
-          horizontal: 16,
-          vertical: 13,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 13),
       ),
     );
   }

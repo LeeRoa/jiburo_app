@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jiburo_app/core/routes/app_paths.dart';
+import 'package:jiburo_app/core/utils/auth_guard.dart';
 import 'package:jiburo_app/core/views/widgets/buttons/main_btn.dart';
 import 'package:jiburo_app/core/views/widgets/pet-card/card_index.dart';
 import 'package:jiburo_app/models/find_pets_model.dart';
@@ -8,16 +11,17 @@ import 'sheet_box.dart';
 import 'sheet_handle_widget.dart';
 import 'sheet_header.dart';
 
-class DraggableScrollableWidget extends StatefulWidget {
+class DraggableScrollableWidget extends ConsumerStatefulWidget {
   final bool isOnMap;
   const DraggableScrollableWidget({super.key, required this.isOnMap});
 
   @override
-  State<DraggableScrollableWidget> createState() =>
+  ConsumerState<DraggableScrollableWidget> createState() =>
       _DraggableScrollableWidgetState();
 }
 
-class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
+class _DraggableScrollableWidgetState
+    extends ConsumerState<DraggableScrollableWidget> {
   double initSize = 0.5;
   double minSize = 0.1;
   double maxSize = 1.0;
@@ -28,6 +32,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "1",
       name: '복돌이',
+      writer: '레이맘',
       title: "복돌이를 찾아주세요",
       breeds: '강아지',
       missingSpot: '서울시 강동구 천호동',
@@ -40,6 +45,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "2",
       name: '아로',
+      writer: '작성자',
       title: "아로를 찾아주세요",
       breeds: '강아지',
       missingSpot: '서울시 강동구 길동',
@@ -52,6 +58,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "3",
       name: '영숙이',
+      writer: '작성자',
       title: "제목을 입력하세요",
       breeds: '고양이',
       missingSpot: '서울시 강동구 명일동',
@@ -64,6 +71,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "4",
       name: '복돌이',
+      writer: '작성자',
       title: "제목을 입력하세요",
       breeds: '강아지',
       missingSpot: '서울시 강동구 천호동',
@@ -76,6 +84,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "5",
       name: '아로',
+      writer: '작성자',
       title: "제목을 입력하세요",
       breeds: '강아지',
       missingSpot: '서울시 강동구 길동',
@@ -88,6 +97,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "6",
       name: '레이',
+      writer: '작성자',
       title: "제목을 입력하세요",
       breeds: '고양이',
       missingSpot: '서울시 강동구 고덕동',
@@ -100,6 +110,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "7",
       name: '복돌이',
+      writer: '작성자',
       title: "제목을 입력하세요",
       breeds: '강아지',
       missingSpot: '서울시 강동구 천호동',
@@ -112,6 +123,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "8",
       name: '아로',
+      writer: '작성자',
       title: "제목을 입력하세요",
       breeds: '강아지',
       missingSpot: '서울시 강동구 길동',
@@ -124,6 +136,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
     FindPetsModel(
       id: "9",
       name: '레이',
+      writer: '작성자',
       title: "제목을 입력하세요",
       breeds: '고양이',
       missingSpot: '서울시 강동구 고덕동',
@@ -215,10 +228,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                                 child: ColoredBox(
                                   color: AppColors.white,
                                   child: Column(
-                                    children: [
-                                      SheetHandleWidget(),
-                                      // SheetHeader(name: '지호', onRefresh: () {}),
-                                    ],
+                                    children: [SheetHandleWidget()],
                                   ),
                                 ),
                               ),
@@ -240,7 +250,7 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                                       pet: pets[index],
 
                                       onMove: () => context.push(
-                                        '/info/${pets[index].id}',
+                                        AppPaths.postDetail(pets[index].id),
                                       ),
                                       onSaveTab: () {},
                                     ),
@@ -261,7 +271,10 @@ class _DraggableScrollableWidgetState extends State<DraggableScrollableWidget> {
                           isIconOnly: isScrolled,
                           resizeBorderRadius: 40,
                           size: Size.medium,
-                          onTap: () => context.push('/add'),
+                          onTap: () {
+                            if (!requireLogin(context, ref)) return;
+                            context.push('/add');
+                          },
                         ),
                       ),
                   ],

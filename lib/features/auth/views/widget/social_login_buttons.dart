@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
+import 'package:jiburo_app/core/utils/auth_guard.dart';
+import 'package:jiburo_app/features/auth/providers/auth_provider.dart';
 
 import 'login_button.dart';
 
-class SocialLoginButtons extends StatelessWidget {
+class SocialLoginButtons extends ConsumerWidget {
   const SocialLoginButtons({super.key});
 
-  void handleLogin(String type) {
-    print(type);
+  Future<void> handleLogin(
+    String type,
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    try {
+      await ref.read(authProvider.notifier).signIn(type);
+      if (!context.mounted) return;
+      onLoginSuccess(context); // 이전에 만든 util 함수
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('로그인 실패: $e')));
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -21,7 +37,7 @@ class SocialLoginButtons extends StatelessWidget {
             text: "카카오 로그인",
             textColor: Colors.black,
             iconSrc: "assets/images/icons/kakaoLogo.svg",
-            onTap: () => handleLogin('카카오'),
+            onTap: () => handleLogin('kakao', context, ref),
           ),
           const SizedBox(height: 8),
           LoginButton(
@@ -29,7 +45,7 @@ class SocialLoginButtons extends StatelessWidget {
             text: "네이버 로그인",
             textColor: Colors.white,
             iconSrc: "assets/images/icons/naverLogo.svg",
-            onTap: () => handleLogin('네이버'),
+            onTap: () => handleLogin('naver', context, ref),
           ),
           const SizedBox(height: 8),
           LoginButton(
@@ -38,7 +54,7 @@ class SocialLoginButtons extends StatelessWidget {
             textColor: Color(0x8A000000),
             iconSrc: "assets/images/icons/GoogleLogo.svg",
             border: Border.all(color: AppColors.neutral90),
-            onTap: () => handleLogin('구글'),
+            onTap: () => handleLogin('google', context, ref),
           ),
         ],
       ),

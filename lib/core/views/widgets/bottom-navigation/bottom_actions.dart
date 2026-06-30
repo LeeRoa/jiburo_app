@@ -41,7 +41,7 @@ class BottomActions extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(bottom: 14),
+      // margin: EdgeInsets.only(bottom: 14),
       child: Column(
         spacing: 16,
         children: [

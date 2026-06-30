@@ -12,10 +12,14 @@ class AppPaths {
   static const menu = '/menu';
 
   // 실종정보 상세
-  static const info = '/info/:id';
+  static const postDetailPath = '/post/:id';
+  static String postDetail(String id) => '/post/$id';
+
+  // 메시지 상세
+  static String messageDetail(String id) => '/message/$id';
 
   // 실종등록
-  static const addMissing = '/add';
+  static const addPost = '/add';
   // 등록 단계 쿼리
   static const addStageLocation = 'location';
   static const addStageContent = 'content';

@@ -125,7 +125,7 @@ class CardIndex extends StatelessWidget {
                           if (CardType.medium == type)
                             IconBtn(
                               iconPath:
-                                  'assets/images/icons/tab-bar/ic_Save${pet.isLike ? '=Active' : ''}.svg',
+                                  'assets/images/icons/tab-bar/ic_Save${pet.isLike! ? '=Active' : ''}.svg',
                               onTap: onSaveTab!,
                             ),
                         ],

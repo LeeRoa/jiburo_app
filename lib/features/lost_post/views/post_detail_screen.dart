@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
+import 'package:jiburo_app/core/utils/auth_guard.dart';
 import 'package:jiburo_app/core/views/widgets/app-bar/index_app_bar.dart';
 import 'package:jiburo_app/core/views/widgets/bottom-navigation/bottom_actions.dart';
 import 'package:jiburo_app/core/views/widgets/buttons/main_btn.dart';
@@ -13,15 +15,15 @@ import 'widget/post_detail/missing_spot.dart';
 import 'widget/post_detail/pet_detail.dart';
 import 'widget/post_detail/photos_widget.dart';
 
-class PostDetailScreen extends StatefulWidget {
+class PostDetailScreen extends ConsumerStatefulWidget {
   final String id;
   const PostDetailScreen({super.key, required this.id});
 
   @override
-  State<PostDetailScreen> createState() => _PostDetailScreenState();
+  ConsumerState<PostDetailScreen> createState() => _PostDetailScreenState();
 }
 
-class _PostDetailScreenState extends State<PostDetailScreen> {
+class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   final List<SearchingInfoModel> infos = [
     SearchingInfoModel(
       id: '1',
@@ -45,7 +47,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       date: '2026.04.27',
     ),
   ];
-  final bool isSave = true;
+  final bool isSave = false;
   final bool isComplete = false;
   final imgs = ['assets/images/1.jpg', 'assets/images/2.png'];
 
@@ -132,7 +134,14 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                   : null,
               mainBtn: MainBtn(
                 btnName: isSave ? '채팅하기' : '저장하기',
-                onTap: () {},
+                onTap: () {
+                  if (isSave) {
+                    print('채팅하기로 이동');
+                  } else {
+                    if (!requireLogin(context, ref)) return;
+                    print('저장하기');
+                  }
+                },
                 isDisabled: isComplete,
               ),
               subBtn: ShareBtn(onTap: () {}),

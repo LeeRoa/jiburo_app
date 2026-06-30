@@ -11,7 +11,7 @@ class PlainLayout extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: appBar,
-      body: body,
+      body: SafeArea(child: body),
     );
   }
 }

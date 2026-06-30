@@ -92,7 +92,7 @@ class PetCard extends StatelessWidget {
                           ),
                           IconBtn(
                             iconPath:
-                                'assets/images/icons/tab-bar/ic_Save${pet.isLike ? '=Active' : ''}.svg',
+                                'assets/images/icons/tab-bar/ic_Save${pet.isLike! ? '=Active' : ''}.svg',
                             onTap: onSaveTab,
                           ),
                         ],
