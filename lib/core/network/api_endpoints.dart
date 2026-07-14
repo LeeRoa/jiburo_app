@@ -1,9 +1,11 @@
+import 'package:jiburo_app/core/constants/common_code_group.dart';
+
 class ApiEndpoints {
   static const String _apiPrefix = '/api/v1';
 
   //common
   static final commonCodes = '$_apiPrefix/common-codes';
-  static String commonCodesByGroup(String group) =>
+  static String commonCodesByGroup(CommonCodeGroup group) =>
       '$_apiPrefix/common-codes/$group';
 
   // lostPosts

@@ -9,6 +9,7 @@ part of 'common_code_response.dto.dart';
 CommonCodeResponse _$CommonCodeResponseFromJson(Map<String, dynamic> json) =>
     CommonCodeResponse(
       code: json['code'] as String,
+      messageKey: json['messageKey'] as String?,
       ref1: json['ref1'] as String?,
       ref2: json['ref2'] as String?,
     );
@@ -16,6 +17,7 @@ CommonCodeResponse _$CommonCodeResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CommonCodeResponseToJson(CommonCodeResponse instance) =>
     <String, dynamic>{
       'code': instance.code,
+      'messageKey': instance.messageKey,
       'ref1': instance.ref1,
       'ref2': instance.ref2,
     };

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
+import 'package:jiburo_app/core/views/widgets/dividing-line/dividing_line.dart';
 import 'package:jiburo_app/core/views/widgets/label/number_label.dart';
 import 'package:jiburo_app/models/searching_info_model.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
@@ -41,12 +42,7 @@ class SearchingCard extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          width: double.infinity,
-          height: 1,
-          margin: EdgeInsets.symmetric(vertical: 4),
-          decoration: BoxDecoration(color: AppColors.neutral95),
-        ),
+        DividingLine(margin: 4),
       ],
     );
   }

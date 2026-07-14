@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:jiburo_app/core/views/widgets/input_text_widget.dart';
+import 'package:jiburo_app/core/views/widgets/input/input_text_widget.dart';
 
 class ChatInputBar extends StatefulWidget {
   const ChatInputBar({super.key});
@@ -10,6 +10,27 @@ class ChatInputBar extends StatefulWidget {
 }
 
 class _ChatInputBarState extends State<ChatInputBar> {
+  final FocusNode focusNode = FocusNode();
+  final TextEditingController controller = TextEditingController();
+  bool hasText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      setState(() {
+        hasText = controller.text.isNotEmpty; // 텍스트 있으면 true
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // 메모리 해제
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,6 +38,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
                 alignment: Alignment.center,
@@ -26,8 +48,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
               ),
               Expanded(
                 child: InputTextWidget(
+                  controller: controller,
                   placeHolder: '텍스트를 입력해 주세요.',
-                  onTap: () {},
                   isChat: true,
                 ),
               ),
@@ -35,7 +57,9 @@ class _ChatInputBarState extends State<ChatInputBar> {
                 alignment: Alignment.center,
                 width: 48,
                 height: 48,
-                child: SvgPicture.asset("assets/images/icons/ic_send.svg"),
+                child: SvgPicture.asset(
+                  'assets/images/icons/${hasText ? "ic_send=active" : "ic_send"}.svg',
+                ),
               ),
             ],
           ),

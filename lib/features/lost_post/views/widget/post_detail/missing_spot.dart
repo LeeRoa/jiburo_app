@@ -74,7 +74,7 @@ class MissingSpot extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: MainBtn(
-                  btnName: '탐색하기',
+                  btnName: '주변탐색',
                   onTap: onSearch!,
                   variant: Variant.outline,
                 ),

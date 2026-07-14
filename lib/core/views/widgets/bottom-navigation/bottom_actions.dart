@@ -40,8 +40,8 @@ class BottomActions extends StatelessWidget {
     final sub = subBtn;
 
     return Container(
+      decoration: BoxDecoration(color: AppColors.white),
       padding: EdgeInsets.all(16),
-      // margin: EdgeInsets.only(bottom: 14),
       child: Column(
         spacing: 16,
         children: [

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/core/routes/app_paths.dart';
-import 'package:jiburo_app/state/location_state.dart';
+import 'package:jiburo_app/features/common_code/providers/common_code_provider.dart';
+import 'package:jiburo_app/features/lost_post/providers/location_state.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
 import 'package:kakao_map_sdk/kakao_map_sdk.dart';
 
-class SplashLoadingScreen extends StatefulWidget {
+class SplashLoadingScreen extends ConsumerStatefulWidget {
   const SplashLoadingScreen({super.key});
 
   @override
-  State<SplashLoadingScreen> createState() => _SplashLoadingScreenState();
+  ConsumerState<SplashLoadingScreen> createState() =>
+      _SplashLoadingScreenState();
 }
 
-class _SplashLoadingScreenState extends State<SplashLoadingScreen> {
-  bool isLogin = true;
-
+class _SplashLoadingScreenState extends ConsumerState<SplashLoadingScreen> {
   Future<void> _initNavigate() async {
+    ref.read(commonCodeProvider);
+
     await Future.wait([
       _initKakaoMap(),
       _getCurrentLocation(),
@@ -26,16 +29,7 @@ class _SplashLoadingScreenState extends State<SplashLoadingScreen> {
 
     if (!mounted) return;
 
-    if (isLogin) {
-      context.go(AppPaths.home);
-    } else {
-      context.go(AppPaths.login);
-    }
-
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(builder: (_) => Navigators()),
-    // );
+    context.go(AppPaths.home);
   }
 
   Future<void> _initKakaoMap() async {

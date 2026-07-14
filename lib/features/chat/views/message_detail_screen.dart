@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
+import 'package:jiburo_app/core/utils/unfocus_input.dart';
 import 'package:jiburo_app/core/views/widgets/app-bar/index_app_bar.dart';
 import 'package:jiburo_app/core/views/widgets/pet-card/card_index.dart';
 import 'package:jiburo_app/core/views/widgets/plain_layout.dart';
@@ -33,10 +34,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // input 포커스 해제
-        FocusScope.of(context).unfocus();
-      },
+      onTap: () => unfocusInput(context),
       child: PlainLayout(
         appBar: IndexAppBar(
           type: AppBarType.detail,

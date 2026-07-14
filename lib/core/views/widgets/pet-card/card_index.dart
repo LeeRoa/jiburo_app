@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
 import 'package:jiburo_app/core/views/widgets/buttons/icon_btn.dart';
+import 'package:jiburo_app/core/views/widgets/dividing-line/dividing_line.dart';
 import 'package:jiburo_app/models/find_pets_model.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
 
@@ -139,12 +140,7 @@ class CardIndex extends StatelessWidget {
 
           if (hasLine)
             // 하단 구분선
-            Container(
-              width: double.infinity,
-              height: 1,
-              margin: EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(color: AppColors.neutral95),
-            ),
+            DividingLine(margin: 12),
         ],
       ),
     );

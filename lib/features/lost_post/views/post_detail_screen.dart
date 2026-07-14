@@ -6,6 +6,7 @@ import 'package:jiburo_app/core/views/widgets/app-bar/index_app_bar.dart';
 import 'package:jiburo_app/core/views/widgets/bottom-navigation/bottom_actions.dart';
 import 'package:jiburo_app/core/views/widgets/buttons/main_btn.dart';
 import 'package:jiburo_app/core/views/widgets/buttons/share_btn.dart';
+import 'package:jiburo_app/core/views/widgets/dividing-line/dividing_line.dart';
 import 'package:jiburo_app/core/views/widgets/plain_layout.dart';
 import 'package:jiburo_app/models/map_position_model.dart';
 import 'package:jiburo_app/models/searching_info_model.dart';
@@ -59,71 +60,72 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         child: Column(
           children: [
             PhotosWidget(imgs: imgs, isComplete: isComplete),
-
             const SizedBox(height: 16),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
-                spacing: 16,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Column(
-                    spacing: 12,
+                    spacing: 16,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        spacing: 12,
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('고양이를 찾아주세요', style: AppFonts.hd2B),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('고양이를 찾아주세요', style: AppFonts.hd2B),
+                                  Text(
+                                    '서울시 강동구 천호동',
+                                    style: AppFonts.l2SB.copyWith(
+                                      color: AppColors.neutral60,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               Text(
-                                '서울시 강동구 천호동',
-                                style: AppFonts.l2SB.copyWith(
+                                '5시간 전',
+                                style: AppFonts.c1M.copyWith(
                                   color: AppColors.neutral60,
                                 ),
                               ),
                             ],
                           ),
-                          Text(
-                            '5시간 전',
-                            style: AppFonts.c1M.copyWith(
-                              color: AppColors.neutral60,
-                            ),
+                          Column(
+                            spacing: 2,
+                            children: [
+                              PetDetail(title: '이름', value: '레이'),
+                              PetDetail(title: '동물', value: '고양이 / 코리안 숏헤어'),
+                              PetDetail(
+                                title: '특징',
+                                value: '5살 / 13kg / 물지 않아요',
+                              ),
+                              PetDetail(title: '사례금', value: '30만원'),
+                            ],
                           ),
                         ],
                       ),
-                      Column(
-                        spacing: 2,
-                        children: [
-                          PetDetail(title: '이름', value: '레이'),
-                          PetDetail(title: '동물', value: '고양이 / 코리안 숏헤어'),
-                          PetDetail(title: '특징', value: '5살 / 13kg / 물지 않아요'),
-                          PetDetail(title: '사례금', value: '30만원'),
-                        ],
+                      DividingLine(margin: 4),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Text(
+                          '사용자가 입력한 텍스트가 표시됩니다. 사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다. 사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.',
+                          style: AppFonts.l1rR,
+                        ),
+                      ),
+                      MissingSpot(
+                        isShow: isSave && !isComplete,
+                        spotAddr: '서울시 강동구 고덕로 210',
+                        searchingInfos: infos,
+                        onSearch: () {},
                       ),
                     ],
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 1,
-                    margin: EdgeInsets.symmetric(vertical: 4),
-                    decoration: BoxDecoration(color: AppColors.neutral95),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Text(
-                      '사용자가 입력한 텍스트가 표시됩니다. 사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다. 사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.사용자가 입력한 텍스트가 표시됩니다.',
-                      style: AppFonts.l1rR,
-                    ),
-                  ),
-                  MissingSpot(
-                    isShow: isSave && !isComplete,
-                    spotAddr: '서울시 강동구 고덕로 210',
-                    searchingInfos: infos,
-                    onSearch: () {},
                   ),
                 ],
               ),

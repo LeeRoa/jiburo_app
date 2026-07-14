@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/core/routes/app_paths.dart';
 import 'package:jiburo_app/core/utils/auth_guard.dart';
+import 'package:jiburo_app/core/utils/unfocus_input.dart';
 import 'package:jiburo_app/core/views/widgets/buttons/main_btn.dart';
 import 'package:jiburo_app/core/views/widgets/pet-card/card_index.dart';
+import 'package:jiburo_app/features/lost_post/utils/post_demo_list.dart';
 import 'package:jiburo_app/models/find_pets_model.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
 import 'sheet_box.dart';
@@ -27,130 +29,42 @@ class _DraggableScrollableWidgetState
   double maxSize = 1.0;
 
   late final ValueNotifier<double> _sheetSize = ValueNotifier(initSize);
+  final DraggableScrollableController _sheetController =
+      DraggableScrollableController();
 
-  final List<FindPetsModel> pets = [
-    FindPetsModel(
-      id: "1",
-      name: '복돌이',
-      writer: '레이맘',
-      title: "복돌이를 찾아주세요",
-      breeds: '강아지',
-      missingSpot: '서울시 강동구 천호동',
-      area: '5',
-      reward: '30',
-      time: '1',
-      imgPath: 'assets/images/1.jpg',
-      isLike: true,
-    ),
-    FindPetsModel(
-      id: "2",
-      name: '아로',
-      writer: '작성자',
-      title: "아로를 찾아주세요",
-      breeds: '강아지',
-      missingSpot: '서울시 강동구 길동',
-      area: '3',
-      reward: '30',
-      time: '3',
-      imgPath: 'assets/images/2.png',
-      isLike: false,
-    ),
-    FindPetsModel(
-      id: "3",
-      name: '영숙이',
-      writer: '작성자',
-      title: "제목을 입력하세요",
-      breeds: '고양이',
-      missingSpot: '서울시 강동구 명일동',
-      area: '2',
-      reward: '50',
-      time: '5',
-      imgPath: 'assets/images/4.png',
-      isLike: false,
-    ),
-    FindPetsModel(
-      id: "4",
-      name: '복돌이',
-      writer: '작성자',
-      title: "제목을 입력하세요",
-      breeds: '강아지',
-      missingSpot: '서울시 강동구 천호동',
-      area: '5',
-      reward: '30',
-      time: '1',
-      imgPath: 'assets/images/5.png',
-      isLike: true,
-    ),
-    FindPetsModel(
-      id: "5",
-      name: '아로',
-      writer: '작성자',
-      title: "제목을 입력하세요",
-      breeds: '강아지',
-      missingSpot: '서울시 강동구 길동',
-      area: '3',
-      reward: '30',
-      time: '3',
-      imgPath: 'assets/images/2.png',
-      isLike: false,
-    ),
-    FindPetsModel(
-      id: "6",
-      name: '레이',
-      writer: '작성자',
-      title: "제목을 입력하세요",
-      breeds: '고양이',
-      missingSpot: '서울시 강동구 고덕동',
-      area: '1',
-      reward: '20',
-      time: '5',
-      imgPath: 'assets/images/3.jpg',
-      isLike: false,
-    ),
-    FindPetsModel(
-      id: "7",
-      name: '복돌이',
-      writer: '작성자',
-      title: "제목을 입력하세요",
-      breeds: '강아지',
-      missingSpot: '서울시 강동구 천호동',
-      area: '5',
-      reward: '30',
-      time: '1',
-      imgPath: 'assets/images/1.jpg',
-      isLike: true,
-    ),
-    FindPetsModel(
-      id: "8",
-      name: '아로',
-      writer: '작성자',
-      title: "제목을 입력하세요",
-      breeds: '강아지',
-      missingSpot: '서울시 강동구 길동',
-      area: '3',
-      reward: '30',
-      time: '3',
-      imgPath: 'assets/images/2.png',
-      isLike: false,
-    ),
-    FindPetsModel(
-      id: "9",
-      name: '레이',
-      writer: '작성자',
-      title: "제목을 입력하세요",
-      breeds: '고양이',
-      missingSpot: '서울시 강동구 고덕동',
-      area: '1',
-      reward: '20',
-      time: '5',
-      imgPath: 'assets/images/3.jpg',
-      isLike: false,
-    ),
-  ];
+  final List<FindPetsModel> pets = PostDemoList.pets;
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  bool _isSearchFocused = false;
 
   @override
   void initState() {
     super.initState();
+
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _isSearchFocused = _searchFocusNode.hasFocus;
+      });
+
+      if (_searchFocusNode.hasFocus) {
+        _sheetController.animateTo(
+          maxSize,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.trim();
+    // setState(() {
+    //   _filteredPets = query.isEmpty
+    //       ? pets
+    //       : pets.where((pet) => pet.name.contains(query)).toList(); // name 필드 기준, 실제 필드명 확인 필요
+    // });
   }
 
   @override
@@ -168,6 +82,9 @@ class _DraggableScrollableWidgetState
 
   @override
   void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    _sheetController.dispose();
     super.dispose();
   }
 
@@ -180,6 +97,7 @@ class _DraggableScrollableWidgetState
         return true;
       },
       child: DraggableScrollableSheet(
+        controller: _sheetController,
         key: ValueKey('$initSize-$minSize'),
         initialChildSize: initSize,
         minChildSize: minSize,
@@ -191,7 +109,7 @@ class _DraggableScrollableWidgetState
         ), // 200ms보다 약간 더 길게
         builder: (BuildContext context, ScrollController scrollController) {
           return GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
+            onTap: () => unfocusInput(context),
             child: ValueListenableBuilder<double>(
               valueListenable: _sheetSize,
               builder: (context, size, child) {
@@ -235,7 +153,15 @@ class _DraggableScrollableWidgetState
                             ),
 
                             SliverToBoxAdapter(
-                              child: SheetHeader(name: '지호', onRefresh: () {}),
+                              child: SheetHeader(
+                                name: '지호',
+                                onRefresh: () {},
+                                searchController: _searchController,
+                                searchFocusNode: _searchFocusNode,
+                                onSearchChanged: (value) {
+                                  _onSearchChanged();
+                                },
+                              ),
                             ),
 
                             SliverPadding(
@@ -261,7 +187,7 @@ class _DraggableScrollableWidgetState
                       ),
                     ),
 
-                    if (showBtn)
+                    if (showBtn && !_isSearchFocused)
                       Positioned(
                         right: 16,
                         bottom: 14,
@@ -273,7 +199,7 @@ class _DraggableScrollableWidgetState
                           size: Size.medium,
                           onTap: () {
                             if (!requireLogin(context, ref)) return;
-                            context.push('/add');
+                            context.push(AppPaths.addPost);
                           },
                         ),
                       ),

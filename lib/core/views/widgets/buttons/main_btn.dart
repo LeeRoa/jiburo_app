@@ -26,6 +26,18 @@ enum Variant {
     pressedColor: AppColors.neutral80,
     textColor: AppColors.black,
     borderColor: AppColors.neutral60,
+  ),
+  black(
+    bgColor: AppColors.black,
+    pressedColor: AppColors.black,
+    textColor: AppColors.white,
+    borderColor: AppColors.black,
+  ),
+  outlineGray(
+    bgColor: AppColors.white,
+    pressedColor: AppColors.black,
+    textColor: AppColors.black,
+    borderColor: AppColors.neutral95,
   );
 
   final Color bgColor;
@@ -42,18 +54,20 @@ enum Variant {
 }
 
 enum Size {
-  large(iconSize: 24, horizontalPd: 28, verticalPd: 12),
-  medium(iconSize: 20, horizontalPd: 20, verticalPd: 9),
-  small(iconSize: 18, horizontalPd: 14, verticalPd: 7);
+  large(height: 48, iconSize: 24, horizontalPd: 28, verticalPd: 12),
+  medium(height: 40, iconSize: 20, horizontalPd: 20, verticalPd: 9),
+  small(height: 32, iconSize: 18, horizontalPd: 14, verticalPd: 7);
 
   final double iconSize;
   final double horizontalPd;
   final double verticalPd;
+  final double height;
 
   const Size({
     required this.iconSize,
     required this.horizontalPd,
     required this.verticalPd,
+    required this.height,
   });
 }
 
@@ -113,18 +127,25 @@ class _MainBtnState extends State<MainBtn> {
         : widget.size.verticalPd;
 
     return GestureDetector(
-      onTapDown: (_) {
-        SystemSound.play(SystemSoundType.click);
-        setState(() => _isPressed = true);
-      },
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: widget.onTap,
+      onTapDown: widget.isDisabled
+          ? null
+          : (_) {
+              SystemSound.play(SystemSoundType.click);
+              setState(() => _isPressed = true);
+            },
+      onTapUp: widget.isDisabled
+          ? null
+          : (_) => setState(() => _isPressed = false),
+      onTapCancel: widget.isDisabled
+          ? null
+          : () => setState(() => _isPressed = false),
+      onTap: widget.isDisabled ? null : widget.onTap,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 120),
+        height: widget.size.height,
         width: widget.isExpanded ? double.infinity : null,
 
-        constraints: BoxConstraints(minHeight: 32, maxHeight: 48),
+        // constraints: BoxConstraints(minHeight: 32, maxHeight: 48),
         padding: widget.isIconOnly
             ? EdgeInsets.all(verticalPd)
             : EdgeInsets.symmetric(
@@ -146,7 +167,8 @@ class _MainBtnState extends State<MainBtn> {
           ),
           border:
               (widget.variant == Variant.outline ||
-                  widget.variant == Variant.outlineDark)
+                  widget.variant == Variant.outlineDark ||
+                  widget.variant == Variant.outlineGray)
               ? Border.all(
                   color: _isPressed
                       ? pressedColor
@@ -175,6 +197,7 @@ class _MainBtnState extends State<MainBtn> {
                       : widget.isDisabled
                       ? AppColors.neutral80
                       : btnTextColor,
+                  height: 1,
                 ),
               ),
             if (!widget.isIconOnly)

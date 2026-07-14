@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
+import 'package:jiburo_app/core/views/widgets/dividing-line/dividing_line.dart';
 import 'package:jiburo_app/features/notification/views/notification_screen.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
 
@@ -77,12 +78,7 @@ class _NotifyCardState extends State<NotifyCard> {
           ),
           SizedBox(height: 8),
 
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 8),
-            height: 1,
-            decoration: BoxDecoration(color: AppColors.neutral95),
-          ),
+          DividingLine(margin: 0),
         ],
       ),
     );

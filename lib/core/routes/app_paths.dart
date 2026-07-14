@@ -19,7 +19,12 @@ class AppPaths {
   static String messageDetail(String id) => '/message/$id';
 
   // 실종등록
-  static const addPost = '/add';
+  static const addPost = '/add-post';
+  static const addPostSearch = '$addPost/search';
+  static const addPostSecond = '$addPost/second';
+  static const addPostThird = '$addPost/third';
+  static const addPostLast = '$addPost/last';
+
   // 등록 단계 쿼리
   static const addStageLocation = 'location';
   static const addStageContent = 'content';

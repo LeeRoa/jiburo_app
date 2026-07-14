@@ -2,26 +2,35 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:jiburo_app/core/theme/app_fonts.dart';
 import 'package:jiburo_app/core/views/widgets/my_location_marker.dart';
-import 'package:jiburo_app/state/location_state.dart';
+import 'package:jiburo_app/features/lost_post/providers/add_post_provider.dart';
+import 'package:jiburo_app/features/lost_post/providers/add_post_state.dart';
+import 'package:jiburo_app/features/lost_post/providers/location_state.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
 import 'package:kakao_map_sdk/kakao_map_sdk.dart';
 
-class KakaoMapScreen extends StatefulWidget {
+class KakaoMapScreen extends ConsumerStatefulWidget {
   final void Function() onTap;
   final void Function() onTapReset;
+  final double floatingBottom;
+  final bool hasPin;
   const KakaoMapScreen({
     super.key,
     required this.onTap,
     required this.onTapReset,
+    this.floatingBottom = 75,
+    this.hasPin = false,
   });
 
   @override
-  State<KakaoMapScreen> createState() => _KakaoMapScreenState();
+  ConsumerState<KakaoMapScreen> createState() => _KakaoMapScreenState();
 }
 
-class _KakaoMapScreenState extends State<KakaoMapScreen> {
+class _KakaoMapScreenState extends ConsumerState<KakaoMapScreen> {
   bool isMapReady = false;
   KakaoMapController? mapController;
   LatLng? myPos;
@@ -130,11 +139,13 @@ class _KakaoMapScreenState extends State<KakaoMapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final addPost = ref.watch(addPostProvider);
+
     return Scaffold(
-      body: SizedBox.expand(
-        child: Stack(
-          children: [
-            AbsorbPointer(
+      body: Stack(
+        children: [
+          SizedBox.expand(
+            child: AbsorbPointer(
               absorbing: !isMapReady,
               child: KakaoMap(
                 option: KakaoMapOption(position: initialPos, zoomLevel: 16),
@@ -166,18 +177,47 @@ class _KakaoMapScreenState extends State<KakaoMapScreen> {
                 },
               ),
             ),
-            if (!isMapReady)
-              Container(
-                color: AppColors.blue,
-                width: double.infinity,
-                height: double.infinity,
+          ),
+
+          if (widget.hasPin)
+            Positioned(
+              top: 280,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.point50,
+                      ),
+                      child: Text(
+                        addPost.locationName ?? '서울시청',
+                        style: AppFonts.l1nM.copyWith(color: AppColors.white),
+                      ),
+                    ),
+                    SvgPicture.asset('assets/images/balloon_tail.svg'),
+                  ],
+                ),
               ),
-          ],
-        ),
+            ),
+
+          if (!isMapReady)
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/map_skeleton.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+        ],
       ),
 
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 75),
+        padding: EdgeInsets.only(bottom: widget.floatingBottom),
         child: SizedBox(
           width: 40,
           height: 40,

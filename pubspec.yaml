@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_svg: ^2.0.9
   cupertino_icons: ^1.0.8
   lottie: ^3.3.2
@@ -41,6 +43,10 @@ dependencies:
 
   # json_annotation 코드 생성기 (build_runner로 실행)
   json_annotation: ^4.12.0
+  # 다국어 지원
+  intl: ^0.20.2
+  table_calendar: ^3.2.0
+  collection: ^1.19.1
 
 flutter_native_splash:
   image: assets/images/logos/Logo-Vertical.png
@@ -72,6 +78,7 @@ flutter:
     - assets/images/icons/tab-bar/
     - assets/images/logos/
     - assets/lottie/
+    - assets/i18n/
 
   fonts:
     - family: Pretendard
