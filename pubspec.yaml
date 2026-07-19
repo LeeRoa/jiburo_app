@@ -47,7 +47,14 @@ dependencies:
   intl: ^0.20.2
   table_calendar: ^3.2.0
   collection: ^1.19.1
+  # 이미지 업로드 설정
+  image_picker: ^1.2.3
+  image_cropper: ^12.2.1
+  # 이미지 확장자 설정
+  flutter_image_compress: ^2.4.0
+  path_provider: ^2.1.6
 
+# 스플래쉬 화면 설정
 flutter_native_splash:
   image: assets/images/logos/Logo-Vertical.png
   color: "#FFFFFF"

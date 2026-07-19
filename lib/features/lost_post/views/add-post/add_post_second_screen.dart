@@ -44,7 +44,7 @@ class _AddPostSecondScreenState extends ConsumerState<AddPostSecondScreen> {
     final picked = await showDatePicker(
       context: context,
       initialDate: _lostDate ?? DateTime.now(),
-      firstDate: DateTime(2020),
+      firstDate: DateTime(2015),
       lastDate: DateTime.now(),
       locale: Locale(language),
       builder: (context, child) {

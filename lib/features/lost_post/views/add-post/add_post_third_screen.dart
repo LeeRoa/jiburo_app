@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jiburo_app/core/routes/app_paths.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
@@ -25,12 +26,24 @@ class AddPostThirdScreen extends ConsumerStatefulWidget {
 
 class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
   List<ImageInfoTextModel> list = ImageInfoTextList.infoList;
-  bool openImgAdd = false;
   List<String> imageUrls = [];
+  List<XFile> selectedImages = [];
 
-  void handleOpenAddImg() {
+  Future<void> pickImages() async {
+    final remaining = 10 - selectedImages.length;
+
+    if (remaining <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('사진은 10장까지 추가 가능 합니다')));
+      return;
+    }
+    final ImagePicker picker = ImagePicker();
+
+    final List<XFile> images = await picker.pickMultiImage(limit: remaining);
+
     setState(() {
-      openImgAdd = true;
+      selectedImages.addAll(images);
     });
   }
 
