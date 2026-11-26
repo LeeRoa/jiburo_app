@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
@@ -5,7 +7,18 @@ import 'package:jiburo_app/core/theme/app_colors.dart';
 class AddImageBox extends StatelessWidget {
   final String imgPath;
   final bool isMain;
-  const AddImageBox({super.key, required this.imgPath, this.isMain = false});
+  final VoidCallback? onRemove;
+
+  /// true면 [imgPath]를 기기 파일 경로로, false면 asset 경로로 읽는다.
+  final bool isFile;
+
+  const AddImageBox({
+    super.key,
+    required this.imgPath,
+    this.isMain = false,
+    this.isFile = false,
+    this.onRemove,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +36,21 @@ class AddImageBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(isMain ? 6.5 : 8),
         child: Stack(
           children: [
-            Positioned.fill(child: Image.asset(imgPath, fit: BoxFit.cover)),
+            Positioned.fill(
+              child: isFile
+                  ? Image.file(File(imgPath), fit: BoxFit.cover)
+                  : Image.asset(imgPath, fit: BoxFit.cover),
+            ),
             Positioned(
               top: 4,
               right: 4,
               width: 16,
               height: 16,
-              child: SvgPicture.asset(
-                'assets/images/icons/ic_Cancel=circle.svg',
+              child: GestureDetector(
+                onTap: onRemove,
+                child: SvgPicture.asset(
+                  'assets/images/icons/ic_Cancel=circle.svg',
+                ),
               ),
             ),
           ],

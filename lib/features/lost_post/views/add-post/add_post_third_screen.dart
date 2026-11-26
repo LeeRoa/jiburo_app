@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +10,9 @@ import 'package:jiburo_app/core/theme/app_colors.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
 import 'package:jiburo_app/core/views/widgets/bottom-navigation/bottom_actions.dart';
 import 'package:jiburo_app/core/views/widgets/buttons/main_btn.dart';
+import 'package:jiburo_app/features/lost_post/data/lost_post_repository_impl.dart';
 import 'package:jiburo_app/features/lost_post/models/image_info_text_model.dart';
+import 'package:jiburo_app/features/lost_post/services/image_compress_service.dart';
 import 'package:jiburo_app/features/lost_post/providers/add_post_provider.dart';
 import 'package:jiburo_app/features/lost_post/utils/image_info_text_list.dart';
 import 'package:jiburo_app/features/lost_post/views/add-post/add_post_layout.dart';
@@ -26,8 +30,8 @@ class AddPostThirdScreen extends ConsumerStatefulWidget {
 
 class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
   List<ImageInfoTextModel> list = ImageInfoTextList.infoList;
-  List<String> imageUrls = [];
-  List<XFile> selectedImages = [];
+  List<File> selectedImages = []; // 압축 완료된 업로드 대상 파일
+  bool _isUploading = false;
 
   Future<void> pickImages() async {
     final remaining = 10 - selectedImages.length;
@@ -41,30 +45,59 @@ class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
     final ImagePicker picker = ImagePicker();
 
     final List<XFile> images = await picker.pickMultiImage(limit: remaining);
+    if (images.isEmpty) return;
+
+    final compressed = <File>[];
+    for (final image in images) {
+      final file = await ImageCompressService.compressForDetail(image.path);
+      if (file != null) compressed.add(file);
+    }
+    if (!mounted) return;
 
     setState(() {
-      selectedImages.addAll(images);
+      selectedImages.addAll(compressed.take(remaining));
     });
   }
 
-  void handleNextStep() {
-    final bool hasImg = imageUrls.isNotEmpty;
+  void removeImage(int index) {
+    setState(() {
+      selectedImages.removeAt(index);
+    });
+  }
 
-    if (hasImg) {
-      // 이미 추가시 로직
-      ref.read(addPostProvider.notifier).setUploadImages([]);
-    } else {
+  Future<void> handleNextStep() async {
+    if (_isUploading) return; // 중복 탭 방지
+
+    if (selectedImages.isEmpty) {
       // 사진이 없어요
       ref.read(addPostProvider.notifier).setNoImages();
+      context.push(AppPaths.addPostLast);
+      return;
     }
-    context.push(AppPaths.addPostLast);
+
+    setState(() => _isUploading = true);
+    try {
+      final repo = ref.read(postRepositoryProvider);
+      final keys = <String>[];
+      for (final file in selectedImages) {
+        keys.add(await repo.uploadImage(file));
+      }
+      if (!mounted) return;
+      ref.read(addPostProvider.notifier).setUploadImages(keys);
+      context.push(AppPaths.addPostLast);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('사진 업로드에 실패했어요. 잠시 후 다시 시도해 주세요')),
+      );
+    } finally {
+      if (mounted) setState(() => _isUploading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool hasImg = imageUrls.isNotEmpty;
-
-    print('이미지있음?: $hasImg, $imageUrls');
+    final bool hasImg = selectedImages.isNotEmpty;
 
     return AddPostLayout(
       contentWidget: [
@@ -85,7 +118,7 @@ class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
                           spacing: 4,
                           children: [
                             GestureDetector(
-                              onTap: () {},
+                              onTap: pickImages,
                               child: Container(
                                 width: 80,
                                 height: 80,
@@ -93,11 +126,7 @@ class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                   color: AppColors.neutral99,
                                 ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    print('터치');
-                                  },
-                                  child: Column(
+                                child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -117,7 +146,6 @@ class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
                                       ),
                                     ],
                                   ),
-                                ),
                               ),
                             ),
                             Expanded(
@@ -128,12 +156,14 @@ class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
                                   itemBuilder: (context, index) {
                                     return AddImageBox(
                                       isMain: index == 0,
-                                      imgPath: 'assets/images/1.jpg',
+                                      imgPath: selectedImages[index].path,
+                                      isFile: true,
+                                      onRemove: () => removeImage(index),
                                     );
                                   },
                                   separatorBuilder: (context, index) =>
                                       SizedBox(width: 4),
-                                  itemCount: 5,
+                                  itemCount: selectedImages.length,
                                 ),
                               ),
                             ),
@@ -172,7 +202,7 @@ class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
           BottomActions.single(
             mainBtn: _mainNextBtn(
               onTap: () => handleNextStep(),
-              isDisabled: !hasImg,
+              isDisabled: !hasImg || _isUploading,
             ),
           )
         else
@@ -181,10 +211,11 @@ class _AddPostThirdScreenState extends ConsumerState<AddPostThirdScreen> {
               variant: Variant.outlineDark,
               btnName: '사진이 없어요',
               onTap: () => handleNextStep(),
+              isDisabled: _isUploading,
             ),
             mainBtn: _mainNextBtn(
               onTap: () => handleNextStep(),
-              isDisabled: !hasImg,
+              isDisabled: !hasImg || _isUploading,
             ),
           ),
       ],

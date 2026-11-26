@@ -24,7 +24,7 @@ class LostPostRepositoryImpl implements LostPostRepository {
     File file, {
     FileCode fileCode = FileCode.post,
   }) async {
-    final String fileName = file.path.split('/').last;
+    final String fileName = file.path.split(RegExp(r'[/\\]')).last;
     final extension = fileName.split('.').last;
     final fileSize = await file.length();
 
@@ -52,18 +52,23 @@ class LostPostRepositoryImpl implements LostPostRepository {
     final presignedUrl = apiResponse.data!.presignedUrl;
     final fileKey = apiResponse.data!.fileKey;
 
-    print('URL?: $presignedUrl, key?: $fileKey');
+    // R2 presigned URL은 앱 인증 헤더(Authorization)가 붙으면 서명 불일치로 거절되므로
+    // 인터셉터가 없는 별도 Dio로 업로드한다. Content-Type은 서버가 서명한 값 그대로 보낸다.
+    final contentType =
+        apiResponse.data!.contentType ?? 'image/${extension.toLowerCase()}';
+    await Dio().put(
+      presignedUrl,
+      data: file.openRead(),
+      options: Options(
+        headers: {
+          Headers.contentTypeHeader: contentType,
+          Headers.contentLengthHeader: fileSize,
+        },
+      ),
+    );
 
-    // await dio.put(
-    //   presignedUrl,
-    //   data: file.openRead(),
-    //   options: Options(
-    //     headers: {
-    //       'Content-Type': 'image/$extension',
-    //       Headers.contentLengthHeader: fileSize,
-    //     },
-    //   ),
-    // );
+    // 업로드 완료 콜백 (ImageMeta PENDING -> COMPLETED). 게시글에는 COMPLETED 키만 첨부 가능
+    await dio.post(ApiEndpoints.imageComplete, data: {'fileKey': fileKey});
 
     return fileKey;
   }

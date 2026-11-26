@@ -11,6 +11,7 @@ PresignedUrlResponse _$PresignedUrlResponseFromJson(
 ) => PresignedUrlResponse(
   presignedUrl: json['presignedUrl'] as String,
   fileKey: json['fileKey'] as String,
+  contentType: json['contentType'] as String?,
 );
 
 Map<String, dynamic> _$PresignedUrlResponseToJson(
@@ -18,4 +19,5 @@ Map<String, dynamic> _$PresignedUrlResponseToJson(
 ) => <String, dynamic>{
   'presignedUrl': instance.presignedUrl,
   'fileKey': instance.fileKey,
+  'contentType': instance.contentType,
 };
