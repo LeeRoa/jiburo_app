@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:jiburo_app/core/network/api_config.dart';
@@ -7,6 +9,7 @@ import 'package:jiburo_app/core/network/dio_client.dart';
 import 'package:jiburo_app/core/network/token_holder.dart';
 import 'package:jiburo_app/core/storage/secure_storage_service.dart';
 import 'package:jiburo_app/features/auth/domain/auth_repository.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final Dio dio;
@@ -16,6 +19,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> signIn(String type) async {
+    if (type == 'kakao') {
+      await _kakaoSignIn();
+      return;
+    }
+
     final result = await FlutterWebAuth2.authenticate(
       url: '$apiBaseUrl/oauth2/authorization/$type',
       callbackUrlScheme: 'jiburo',
@@ -32,6 +40,47 @@ class AuthRepositoryImpl implements AuthRepository {
 
     TokenHolder.accessToken = accessToken;
 
+    if (refreshToken != null) {
+      await secureStorageService.saveRefreshToken(refreshToken);
+    }
+  }
+
+  // 카카오 SDK 로그인: 카카오톡(없으면 카카오 계정)으로 로그인해 받은 카카오 액세스 토큰을
+  // 서버(POST /auth/login/kakao)에 보내 우리 서비스의 Access/Refresh Token으로 교환한다.
+  Future<void> _kakaoSignIn() async {
+    if (kIsWeb) {
+      throw Exception('카카오 로그인은 Android/iOS 앱에서만 지원해요');
+    }
+
+    OAuthToken kakaoToken;
+    if (await isKakaoTalkInstalled()) {
+      try {
+        kakaoToken = await UserApi.instance.loginWithKakaoTalk();
+      } catch (e) {
+        // 카카오톡 로그인을 사용자가 취소한 경우에는 계정 로그인으로 넘어가지 않고 중단
+        if (e is PlatformException && e.code == 'CANCELED') rethrow;
+        kakaoToken = await UserApi.instance.loginWithKakaoAccount();
+      }
+    } else {
+      kakaoToken = await UserApi.instance.loginWithKakaoAccount();
+    }
+
+    final response = await dio.post(
+      '/api/v1/auth/login/kakao',
+      data: {'accessToken': kakaoToken.accessToken},
+    );
+    await _saveTokens(_unwrap(response.data));
+  }
+
+  Future<void> _saveTokens(Map<String, dynamic> data) async {
+    final accessToken = data['accessToken'] as String?;
+    final refreshToken = data['refreshToken'] as String?;
+
+    if (accessToken == null) {
+      throw Exception('로그인 실패: accessToken 없음');
+    }
+
+    TokenHolder.accessToken = accessToken;
     if (refreshToken != null) {
       await secureStorageService.saveRefreshToken(refreshToken);
     }

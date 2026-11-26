@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jiburo_app/core/provider/locale_provider.dart';
 import 'package:jiburo_app/core/utils/i18n_manager.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:jiburo_app/core/network/api_config.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 import 'core/routes/app_router.dart';
 
@@ -23,6 +25,9 @@ void main() async {
       : 'en';
 
   print('기기 접속언어: $finalLanguage');
+
+  // 카카오 로그인 SDK 초기화 (Android/iOS 네이티브 로그인)
+  KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
 
   // 번역파일 로드
   await I18nManager.loadJson(finalLanguage);
