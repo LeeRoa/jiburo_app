@@ -9,6 +9,7 @@ class LostPostCreateRequest {
   final String categoryCode; // common codes
   final String? name;
   final String animalTypeCode; // common codes
+  final String? animalTypeCustom; // animalTypeCode가 ETC일 때 직접 입력한 종류
   final String? breed;
   final String genderCode; // common codes
   final String? color;
@@ -31,6 +32,7 @@ class LostPostCreateRequest {
     required this.categoryCode,
     this.name,
     required this.animalTypeCode,
+    this.animalTypeCustom,
     required this.breed,
     required this.genderCode,
     required this.color,

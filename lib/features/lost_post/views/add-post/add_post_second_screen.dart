@@ -33,6 +33,7 @@ class _AddPostSecondScreenState extends ConsumerState<AddPostSecondScreen> {
   final TextEditingController _lostDateController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animalTypeController = TextEditingController();
+  final TextEditingController _animalCustomController = TextEditingController();
   final TextEditingController _breedController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -94,11 +95,20 @@ class _AddPostSecondScreenState extends ConsumerState<AddPostSecondScreen> {
       return;
     }
 
+    final isEtc = selectedCode == 'ETC';
+    if (isEtc && _animalCustomController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('실종 동물의 종류를 직접 입력해 주세요')));
+      return;
+    }
+
     ref
         .read(addPostProvider.notifier)
         .setPetInfo(
           name: _nameController.text.trim(),
           animalTypeCode: selectedCode,
+          animalTypeCustom: isEtc ? _animalCustomController.text.trim() : null,
           breed: _breedController.text,
           age: int.tryParse(_ageController.text),
           weight: int.tryParse(_weightController.text),
@@ -119,6 +129,7 @@ class _AddPostSecondScreenState extends ConsumerState<AddPostSecondScreen> {
   void dispose() {
     _nameController.dispose();
     _animalTypeController.dispose();
+    _animalCustomController.dispose();
     _breedController.dispose();
     _ageController.dispose();
     _weightController.dispose();
@@ -181,6 +192,14 @@ class _AddPostSecondScreenState extends ConsumerState<AddPostSecondScreen> {
                               },
                               selectedCode: selectedCode,
                             ),
+                            if (selectedCode == 'ETC')
+                              InputWithLabel(
+                                controller: _animalCustomController,
+                                label: '동물 종류',
+                                isImport: true,
+                                placeHolder: '이구아나 / 햄스터 등 직접 입력해주세요.',
+                                inputAction: TextInputAction.next,
+                              ),
                             InputWithLabel(
                               controller: _breedController,
                               label: '종 구분',

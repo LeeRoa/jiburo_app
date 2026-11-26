@@ -31,6 +31,7 @@ class AddPostNotifier extends StateNotifier<AddPostState> {
   // step 2 완료
   void setPetInfo({
     required String animalTypeCode,
+    String? animalTypeCustom,
     required String breed,
     required String genderCode,
     required int reward,
@@ -44,6 +45,7 @@ class AddPostNotifier extends StateNotifier<AddPostState> {
     state = state.copyWith(
       name: name,
       animalTypeCode: animalTypeCode,
+      animalTypeCustom: animalTypeCustom,
       breed: breed,
       age: age,
       weight: weight,
@@ -97,6 +99,7 @@ class AddPostNotifier extends StateNotifier<AddPostState> {
               categoryCode: state.categoryCode!,
               name: state.name,
               animalTypeCode: state.animalTypeCode!,
+              animalTypeCustom: state.animalTypeCustom,
               breed: state.breed,
               genderCode: state.genderCode!,
               color: state.color,

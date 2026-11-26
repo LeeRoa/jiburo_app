@@ -9,6 +9,7 @@ class AddPostState {
   final DateTime? lostDate;
   final String? name;
   final String? animalTypeCode;
+  final String? animalTypeCustom;
   final String? breed;
   final int? age;
   final int? weight;
@@ -37,6 +38,7 @@ class AddPostState {
     this.lostDate,
     this.name,
     this.animalTypeCode,
+    this.animalTypeCustom,
     this.breed,
     this.genderCode,
     this.color,
@@ -60,6 +62,7 @@ class AddPostState {
     String? title,
     String? name,
     String? animalTypeCode,
+    String? animalTypeCustom,
     String? breed,
     int? age,
     int? weight,
@@ -84,6 +87,10 @@ class AddPostState {
       name: name ?? this.name,
       lostDate: lostDate ?? this.lostDate,
       animalTypeCode: animalTypeCode ?? this.animalTypeCode,
+      // 동물 종류를 새로 정하면 이전 직접 입력값이 남지 않도록 animalTypeCode와 함께 갱신
+      animalTypeCustom: animalTypeCode != null
+          ? animalTypeCustom
+          : (animalTypeCustom ?? this.animalTypeCustom),
       breed: breed ?? this.breed,
       age: age ?? this.age,
       weight: weight ?? this.weight,
