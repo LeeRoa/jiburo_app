@@ -1,5 +1,4 @@
 class TokenHolder {
-  // static String? accessToken;
-  static String? accessToken =
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwM2ZkOTg5Zi0zNjcyLTRmOWEtYTg0YS1iOTc5OGJlOWU1N2EiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxODAwMTc4MjkxMzc3Mn0.DJnyYi64XW_WUULoEMwGmi_XvIRI0sJn4U4bTqjnms4';
+  // 로그인 성공 시 채워지는 메모리 보관용 Access Token (소스에 토큰을 하드코딩하지 말 것)
+  static String? accessToken;
 }

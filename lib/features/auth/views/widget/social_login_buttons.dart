@@ -26,6 +26,22 @@ class SocialLoginButtons extends ConsumerWidget {
     }
   }
 
+  // flutter run --dart-define=DEV_LOGIN=true 로 실행할 때만 개발용 로그인 버튼을 노출
+  static const bool _devLogin = bool.fromEnvironment('DEV_LOGIN');
+
+  Future<void> handleDevLogin(BuildContext context, WidgetRef ref) async {
+    try {
+      await ref.read(authProvider.notifier).devSignIn('tester');
+      if (!context.mounted) return;
+      onLoginSuccess(context);
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('개발 로그인 실패: $e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
@@ -56,6 +72,16 @@ class SocialLoginButtons extends ConsumerWidget {
             border: Border.all(color: AppColors.neutral90),
             onTap: () => handleLogin('google', context, ref),
           ),
+          if (_devLogin) ...[
+            const SizedBox(height: 8),
+            LoginButton(
+              color: AppColors.neutral90,
+              text: "개발용 로그인 (local)",
+              textColor: Colors.black,
+              iconSrc: "assets/images/icons/ic_Pet.svg",
+              onTap: () => handleDevLogin(context, ref),
+            ),
+          ],
         ],
       ),
     );

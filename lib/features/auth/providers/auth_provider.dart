@@ -36,6 +36,15 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(accessToken: TokenHolder.accessToken, isLogin: true);
   }
 
+  Future<void> devSignIn(String nickname) async {
+    await ref.read(authRepositoryProvider).devSignIn(nickname);
+    state = state.copyWith(
+      accessToken: TokenHolder.accessToken,
+      isLogin: true,
+      wasLoggedIn: true,
+    );
+  }
+
   Future<void> logout() async {
     await ref.read(secureStorageServiceProvider).deleteRefreshToken();
     state = state.copyWith(accessToken: null, isLogin: false);

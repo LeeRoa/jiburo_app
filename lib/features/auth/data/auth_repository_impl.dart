@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'package:jiburo_app/core/network/api_config.dart';
 import 'package:jiburo_app/core/network/api_endpoints.dart';
 import 'package:jiburo_app/core/network/dio_client.dart';
 import 'package:jiburo_app/core/network/token_holder.dart';
@@ -16,7 +17,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> signIn(String type) async {
     final result = await FlutterWebAuth2.authenticate(
-      url: 'http://localhost:8080/oauth2/authorization/$type',
+      url: '$apiBaseUrl/oauth2/authorization/$type',
       callbackUrlScheme: 'jiburo',
       // options: FlutterWebAuth2Options(preferEphemeral: true),
     );
@@ -37,6 +38,35 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> devSignIn(String nickname) async {
+    // 서버 local 프로파일에서만 열리는 /auth/dev-login. 소셜 로그인 없이 테스트 계정으로 토큰을 받는다.
+    final response = await dio.post(
+      '/api/v1/auth/dev-login',
+      data: {'nickname': nickname},
+    );
+
+    final data = _unwrap(response.data);
+    final accessToken = data['accessToken'] as String?;
+    final refreshToken = data['refreshToken'] as String?;
+
+    if (accessToken == null) {
+      throw Exception('개발 로그인 실패: accessToken 없음');
+    }
+
+    TokenHolder.accessToken = accessToken;
+    if (refreshToken != null) {
+      await secureStorageService.saveRefreshToken(refreshToken);
+    }
+  }
+
+  // 서버 응답은 ApiResponse({success, data}) 래퍼로 내려온다. 래퍼가 없으면 그대로 사용.
+  Map<String, dynamic> _unwrap(dynamic body) {
+    final map = body as Map<String, dynamic>;
+    final inner = map['data'];
+    return inner is Map<String, dynamic> ? inner : map;
+  }
+
+  @override
   Future<String> reissue() async {
     final refreshToken = await secureStorageService.getRefreshToken();
 
@@ -48,7 +78,7 @@ class AuthRepositoryImpl implements AuthRepository {
     // 아무런 인터셉터도 달라붙지 않은 청정 상태의 순수 Dio 인스턴스를 임시로 생성
     final pureDio = Dio(
       BaseOptions(
-        baseUrl: 'http://localhost:8080',
+        baseUrl: apiBaseUrl,
         connectTimeout: const Duration(seconds: 5),
         receiveTimeout: const Duration(seconds: 5),
       ),
@@ -59,8 +89,9 @@ class AuthRepositoryImpl implements AuthRepository {
       data: {'refreshToken': refreshToken},
     );
 
-    final newAccessToken = response.data['accessToken'] as String;
-    final newRefreshToken = response.data['refreshToken'] as String?;
+    final data = _unwrap(response.data);
+    final newAccessToken = data['accessToken'] as String;
+    final newRefreshToken = data['refreshToken'] as String?;
 
     if (newRefreshToken != null) {
       await secureStorageService.saveRefreshToken(newRefreshToken);
