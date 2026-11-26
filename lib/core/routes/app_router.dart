@@ -16,7 +16,10 @@ import 'package:jiburo_app/features/auth/views/login_screen.dart';
 import 'package:jiburo_app/core/views/not_found_screen.dart';
 import 'package:jiburo_app/features/save/save_screen.dart';
 import 'package:jiburo_app/core/views/splash_loading_screen.dart';
+import 'package:jiburo_app/features/user/views/my_activities_screen.dart';
 import 'package:jiburo_app/features/user/views/my_page_screen.dart';
+import 'package:jiburo_app/features/user/views/my_posts_screen.dart';
+import 'package:jiburo_app/features/user/views/profile_edit_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppPaths.splash,
@@ -59,6 +62,10 @@ final GoRouter appRouter = GoRouter(
       path: '${AppPaths.message}/:id',
       builder: (id) => MessageDetailScreen(id: id!),
     ),
+    GoRoute(
+      path: AppPaths.profileEdit,
+      builder: (context, state) => const ProfileEditScreen(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return MainLayout(navigationShell: navigationShell);
@@ -77,6 +84,14 @@ final GoRouter appRouter = GoRouter(
           path: AppPaths.profile,
           page: MyPageScreen(),
           sub: [
+            GoRoute(
+              path: 'posts',
+              builder: (context, state) => const MyPostsScreen(),
+            ),
+            GoRoute(
+              path: 'activities',
+              builder: (context, state) => const MyActivitiesScreen(),
+            ),
             goRoute(
               path: '${AppPaths.profile}/:id',
               builder: (id) => Container(),

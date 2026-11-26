@@ -11,6 +11,11 @@ class AppPaths {
   static const profile = '/profile';
   static const menu = '/menu';
 
+  // 마이페이지 하위
+  static const profileEdit = '/profile-edit';
+  static const myPosts = '/profile/posts';
+  static const myActivities = '/profile/activities';
+
   // 실종정보 상세
   static const postDetailPath = '/post/:id';
   static String postDetail(String id) => '/post/$id';

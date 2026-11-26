@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jiburo_app/core/network/api_config.dart';
 import 'package:jiburo_app/core/network/api_endpoints.dart';
 import 'package:jiburo_app/core/network/token_holder.dart';
+import 'package:jiburo_app/features/auth/providers/auth_provider.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 /// 앱 전체 공용 STOMP 연결
@@ -122,6 +123,10 @@ class ChatSocketService {
 
 final chatSocketProvider = Provider<ChatSocketService>((ref) {
   final service = ChatSocketService();
+  // 로그아웃되면 이전 계정 토큰의 연결을 끊음 (다음 로그인 때 새 토큰으로 재연결)
+  ref.listen(authProvider, (prev, next) {
+    if (prev?.isLogin == true && !next.isLogin) service.disconnect();
+  });
   ref.onDispose(service.disconnect);
   return service;
 });

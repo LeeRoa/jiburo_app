@@ -19,6 +19,12 @@ class ApiEndpoints {
   // auth
   static final authReissue = '$_apiPrefix/auth/reissue';
   static final authToken = '$_apiPrefix/auth/token';
+  static final authLogout = '$_apiPrefix/auth/logout';
+
+  // 마이페이지
+  static final usersMe = '$_apiPrefix/users/me';
+  static final usersMePosts = '$_apiPrefix/users/me/posts';
+  static final usersMeActivities = '$_apiPrefix/users/me/activities';
 
   //image
   static final presignedUrl = '$_apiPrefix/images/presigned-url';

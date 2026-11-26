@@ -80,6 +80,16 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
+  /// 로그아웃 (서버 호출 실패해도 기기 쪽 로그아웃은 진행)
+  Future<void> signOut() async {
+    try {
+      await ref.read(authRepositoryProvider).logout();
+    } catch (_) {
+      // 네트워크 오류 등: 로컬 로그아웃만 진행
+    }
+    await logout();
+  }
+
   Future<void> logout() async {
     await ref.read(secureStorageServiceProvider).deleteRefreshToken();
     TokenHolder.accessToken = null;

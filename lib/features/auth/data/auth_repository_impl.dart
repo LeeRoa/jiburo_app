@@ -42,7 +42,10 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception('로그인 실패: code 없음');
     }
 
-    final response = await dio.post(ApiEndpoints.authToken, data: {'code': code});
+    final response = await dio.post(
+      ApiEndpoints.authToken,
+      data: {'code': code},
+    );
     await _saveTokens(_unwrap(response.data));
   }
 
@@ -114,6 +117,11 @@ class AuthRepositoryImpl implements AuthRepository {
     final map = body as Map<String, dynamic>;
     final inner = map['data'];
     return inner is Map<String, dynamic> ? inner : map;
+  }
+
+  @override
+  Future<void> logout() async {
+    await dio.post(ApiEndpoints.authLogout);
   }
 
   @override
