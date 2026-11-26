@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 로컬 테스트 서버(http://<PC IP>:8080, 로컬 S3 http://<PC IP>:8333) 접속용. debug 빌드에만 적용된다. -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>
