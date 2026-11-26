@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jiburo_app/core/routes/app_paths.dart';
+import 'package:jiburo_app/features/auth/providers/auth_provider.dart';
 import 'package:jiburo_app/features/common_code/providers/common_code_provider.dart';
 import 'package:jiburo_app/features/lost_post/providers/location_state.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
@@ -22,6 +23,8 @@ class _SplashLoadingScreenState extends ConsumerState<SplashLoadingScreen> {
     ref.read(commonCodeProvider);
 
     await Future.wait([
+      // 자동 로그인 (스플래시 대기 시간과 병렬 처리)
+      ref.read(authProvider.notifier).restoreSession(),
       _initKakaoMap(),
       _getCurrentLocation(),
       Future.delayed(Duration(seconds: 3)),

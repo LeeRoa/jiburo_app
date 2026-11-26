@@ -146,6 +146,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await secureStorageService.saveRefreshToken(newRefreshToken);
     }
 
+    // 이후 요청·STOMP 연결용 메모리 토큰 갱신
+    TokenHolder.accessToken = newAccessToken;
+
     return newAccessToken;
   }
 }
