@@ -18,6 +18,7 @@ class ApiEndpoints {
 
   // auth
   static final authReissue = '$_apiPrefix/auth/reissue';
+  static final authToken = '$_apiPrefix/auth/token';
 
   //image
   static final presignedUrl = '$_apiPrefix/images/presigned-url';

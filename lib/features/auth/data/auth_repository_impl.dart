@@ -30,19 +30,20 @@ class AuthRepositoryImpl implements AuthRepository {
       // options: FlutterWebAuth2Options(preferEphemeral: true),
     );
 
+    // 서버는 토큰 대신 1회용 code만 리다이렉트로 전달 (토큰은 POST /auth/token 교환)
     final uri = Uri.parse(result);
-    final accessToken = uri.queryParameters['accessToken'];
-    final refreshToken = uri.queryParameters['refreshToken'];
-
-    if (accessToken == null) {
-      throw Exception('로그인 실패: accessToken 없음');
+    final error = uri.queryParameters['error'];
+    if (error != null) {
+      throw Exception('로그인 실패: $error');
     }
 
-    TokenHolder.accessToken = accessToken;
-
-    if (refreshToken != null) {
-      await secureStorageService.saveRefreshToken(refreshToken);
+    final code = uri.queryParameters['code'];
+    if (code == null) {
+      throw Exception('로그인 실패: code 없음');
     }
+
+    final response = await dio.post(ApiEndpoints.authToken, data: {'code': code});
+    await _saveTokens(_unwrap(response.data));
   }
 
   // 카카오 SDK 로그인: 카카오톡(없으면 카카오 계정)으로 로그인해 받은 카카오 액세스 토큰을

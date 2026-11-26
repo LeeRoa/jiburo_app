@@ -36,6 +36,18 @@
                 <data android:scheme="kakao54b8d7c26f777cbf09b20c3760b731d5" android:host="oauth" />
             </intent-filter>
         </activity>
+        <!-- 구글·네이버 웹 로그인 결과(jiburo://)를 앱으로 돌려받는 액티비티 (flutter_web_auth_2) -->
+        <activity
+            android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
+            android:exported="true"
+            android:taskAffinity="">
+            <intent-filter android:label="flutter_web_auth_2">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="jiburo" />
+            </intent-filter>
+        </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
