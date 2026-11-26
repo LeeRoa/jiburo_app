@@ -32,6 +32,13 @@ final chatRoomsProvider = FutureProvider.autoDispose<List<ChatRoom>>((ref) {
   return ref.watch(chatRepositoryProvider).fetchRooms();
 });
 
+/// 채팅방 상단 게시글 카드 데이터
+final chatPostProvider = FutureProvider.autoDispose
+    .family<ChatPostSummary, String>(
+      (ref, postId) =>
+          ref.watch(chatRepositoryProvider).fetchPostSummary(postId),
+    );
+
 class ChatRoomState {
   final ChatRoomDetail detail;
   final List<ChatMessage> messages; // 오래된 순

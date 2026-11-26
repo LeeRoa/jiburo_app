@@ -118,6 +118,41 @@ class ChatRoomDetail {
   );
 }
 
+/// 채팅방 상단 게시글 카드용 요약 (GET /posts/{id} 응답 일부)
+class ChatPostSummary {
+  final String id;
+  final String title;
+  final String foundLocation;
+  final double? latitude;
+  final double? longitude;
+  final int? reward; // 단위: 만원
+  final DateTime? createdAt;
+  final String? imageUrl;
+
+  const ChatPostSummary({
+    required this.id,
+    required this.title,
+    required this.foundLocation,
+    this.latitude,
+    this.longitude,
+    this.reward,
+    this.createdAt,
+    this.imageUrl,
+  });
+
+  factory ChatPostSummary.fromJson(Map<String, dynamic> json) =>
+      ChatPostSummary(
+        id: json['id'] as String,
+        title: json['title'] as String? ?? '',
+        foundLocation: json['foundLocation'] as String? ?? '',
+        latitude: (json['latitude'] as num?)?.toDouble(),
+        longitude: (json['longitude'] as num?)?.toDouble(),
+        reward: (json['reward'] as num?)?.toInt(),
+        createdAt: _parseTime(json['createdAt']),
+        imageUrl: json['imageUrl'] as String?,
+      );
+}
+
 /// 읽음 처리 브로드캐스트 (해당 메시지까지 읽음)
 class ChatReadEvent {
   final String userId;

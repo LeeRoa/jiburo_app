@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jiburo_app/core/routes/app_paths.dart';
 import 'package:jiburo_app/core/theme/app_colors.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
 import 'package:jiburo_app/core/utils/formatters.dart';
 import 'package:jiburo_app/core/utils/unfocus_input.dart';
 import 'package:jiburo_app/core/views/widgets/app-bar/index_app_bar.dart';
 import 'package:jiburo_app/core/views/widgets/plain_layout.dart';
+import 'package:jiburo_app/features/chat/data/chat_repository.dart';
 import 'package:jiburo_app/features/chat/dto/chat_dtos.dart';
 import 'package:jiburo_app/features/chat/providers/chat_providers.dart';
 import 'package:jiburo_app/features/chat/views/widget/chat_bubble.dart';
 import 'package:jiburo_app/features/chat/views/widget/chat_input_bar.dart';
+import 'package:jiburo_app/features/chat/views/widget/chat_post_card.dart';
+import 'package:jiburo_app/features/chat/views/widget/chat_room_menu.dart';
 import 'package:jiburo_app/features/lost_post/services/image_compress_service.dart';
 
 class MessageDetailScreen extends ConsumerStatefulWidget {
@@ -38,7 +40,9 @@ class _MessageDetailScreenState extends ConsumerState<MessageDetailScreen> {
 
   void _toast(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _scrollToBottom() {
@@ -74,6 +78,26 @@ class _MessageDetailScreenState extends ConsumerState<MessageDetailScreen> {
     }
   }
 
+  Future<void> _onMenu() async {
+    final action = await showChatRoomMenu(context);
+    if (action == ChatRoomMenuAction.leave) await _confirmLeave();
+  }
+
+  /// 확인 후 나가기 → 목록 갱신 → 목록 화면으로 복귀
+  Future<void> _confirmLeave() async {
+    if (!mounted) return;
+    final ok = await showLeaveRoomDialog(context);
+    if (ok != true || !mounted) return;
+    try {
+      await ref.read(chatRepositoryProvider).exitRoom(widget.id);
+      ref.invalidate(chatRoomsProvider);
+      if (!mounted) return;
+      context.pop();
+    } catch (_) {
+      _toast('채팅방을 나가지 못했어요');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final room = ref.watch(chatRoomProvider(widget.id));
@@ -98,14 +122,14 @@ class _MessageDetailScreenState extends ConsumerState<MessageDetailScreen> {
         appBar: IndexAppBar(
           type: AppBarType.detail,
           title: nickname ?? '채팅',
-          onMenu: () {},
+          onMenu: _onMenu,
         ),
         body: Container(
           padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
           child: Column(
             children: [
               if (room.valueOrNull != null)
-                _PostHeader(detail: room.requireValue.detail),
+                ChatPostCard(detail: room.requireValue.detail),
               Expanded(
                 child: room.when(
                   loading: () =>
@@ -145,39 +169,6 @@ class _MessageDetailScreenState extends ConsumerState<MessageDetailScreen> {
   }
 }
 
-/// 연결 게시글 요약 (탭 시 게시글 이동, 삭제된 게시글은 안내 문구만 표시)
-class _PostHeader extends StatelessWidget {
-  final ChatRoomDetail detail;
-  const _PostHeader({required this.detail});
-
-  @override
-  Widget build(BuildContext context) {
-    final deleted = detail.postDeleted;
-    return GestureDetector(
-      onTap: deleted
-          ? null
-          : () => context.push(AppPaths.postDetail(detail.postId)),
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: AppColors.neutral99,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          deleted ? '삭제된 게시글이에요' : detail.postTitle,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: AppFonts.b2nM.copyWith(
-            color: deleted ? AppColors.neutral60 : AppColors.neutral20,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _MessageList extends StatelessWidget {
   final List<ChatMessage> messages;
   final String? myId;
@@ -208,9 +199,11 @@ class _MessageList extends StatelessWidget {
         final isMe = m.senderId == myId;
         final newDay =
             m.createdAt != null &&
-            (prev?.createdAt == null || !_sameDay(prev!.createdAt!, m.createdAt!));
+            (prev?.createdAt == null ||
+                !_sameDay(prev!.createdAt!, m.createdAt!));
         // 연속 발신 시 첫 메시지에만 아바타 표시
-        final showAvatar = !isMe && (prev == null || prev.senderId != m.senderId || newDay);
+        final showAvatar =
+            !isMe && (prev == null || prev.senderId != m.senderId || newDay);
 
         if (m.isSystem) {
           return Padding(

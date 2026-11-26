@@ -30,6 +30,11 @@ class ChatRepository {
     return ChatRoomDetail.fromJson(_data(res.data) as Map<String, dynamic>);
   }
 
+  Future<ChatPostSummary> fetchPostSummary(String postId) async {
+    final res = await dio.get(ApiEndpoints.postById(postId));
+    return ChatPostSummary.fromJson(_data(res.data) as Map<String, dynamic>);
+  }
+
   Future<void> exitRoom(String roomId) async {
     final res = await dio.delete(ApiEndpoints.room(roomId));
     _data(res.data);
