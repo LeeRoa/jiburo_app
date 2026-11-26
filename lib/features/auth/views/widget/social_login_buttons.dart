@@ -18,7 +18,9 @@ class SocialLoginButtons extends ConsumerWidget {
       await ref.read(authProvider.notifier).signIn(type);
       if (!context.mounted) return;
       onLoginSuccess(context); // 이전에 만든 util 함수
-    } catch (e) {
+    } catch (e, stack) {
+      // 원인 추적용 (logcat에서 확인)
+      debugPrint('[소셜 로그인 실패] type=$type, ${e.runtimeType}: $e\n$stack');
       if (!context.mounted) return;
       ScaffoldMessenger.of(
         context,
