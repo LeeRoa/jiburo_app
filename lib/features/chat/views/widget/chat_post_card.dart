@@ -6,9 +6,10 @@ import 'package:jiburo_app/core/theme/app_colors.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
 import 'package:jiburo_app/core/utils/formatters.dart';
 import 'package:jiburo_app/core/views/widgets/dividing-line/dividing_line.dart';
+import 'package:jiburo_app/core/views/widgets/reward_text.dart';
 import 'package:jiburo_app/features/chat/dto/chat_dtos.dart';
 import 'package:jiburo_app/features/chat/providers/chat_providers.dart';
-import 'package:jiburo_app/features/lost_post/providers/location_state.dart';
+import 'package:jiburo_app/features/lost_post/dto/post_summary.dart';
 
 /// 채팅방 상단 게시글 카드 (사진, 제목, 위치, 반경, 사례금, 등록 시간)
 /// - 상세 정보 로딩 중이거나 실패하면 채팅방 응답의 제목만 표시
@@ -74,25 +75,13 @@ class _Thumbnail extends StatelessWidget {
 
 class _Info extends StatelessWidget {
   final String title;
-  final ChatPostSummary? post;
+  final PostSummary? post;
   const _Info({required this.title, required this.post});
-
-  /// 내 위치와 게시글 위치를 모두 알 때만 거리 문구 표시
-  String? get _nearby {
-    final lat = post?.latitude;
-    final lng = post?.longitude;
-    final myLat = LocationState.lat;
-    final myLng = LocationState.lng;
-    if (lat == null || lng == null || myLat == null || myLng == null) {
-      return null;
-    }
-    return formatNearby(distanceKm(myLat, myLng, lat, lng));
-  }
 
   @override
   Widget build(BuildContext context) {
     final reward = post?.reward;
-    final nearby = _nearby;
+    final nearby = post?.nearbyLabel;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,19 +101,7 @@ class _Info extends StatelessWidget {
             if (nearby != null) Text(nearby, style: AppFonts.c2R),
             if (reward != null && reward > 0) ...[
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  Text('사례금 : ', style: AppFonts.l2M),
-                  Text(
-                    formatCurrency(reward),
-                    style: AppFonts.l2M.copyWith(color: AppColors.point50),
-                  ),
-                  Text(
-                    '만원',
-                    style: AppFonts.l2M.copyWith(color: AppColors.neutral60),
-                  ),
-                ],
-              ),
+              RewardText(won: reward),
             ],
           ],
         ),

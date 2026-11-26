@@ -8,6 +8,7 @@ import 'package:jiburo_app/features/auth/providers/auth_provider.dart';
 import 'package:jiburo_app/features/chat/data/chat_repository.dart';
 import 'package:jiburo_app/features/chat/data/chat_socket_service.dart';
 import 'package:jiburo_app/features/chat/dto/chat_dtos.dart';
+import 'package:jiburo_app/features/lost_post/dto/post_summary.dart';
 import 'package:jiburo_app/features/lost_post/dto/presigned_url_request.dto.dart';
 import 'package:jiburo_app/features/lost_post/data/lost_post_repository_impl.dart';
 
@@ -33,11 +34,9 @@ final chatRoomsProvider = FutureProvider.autoDispose<List<ChatRoom>>((ref) {
 });
 
 /// 채팅방 상단 게시글 카드 데이터
-final chatPostProvider = FutureProvider.autoDispose
-    .family<ChatPostSummary, String>(
-      (ref, postId) =>
-          ref.watch(chatRepositoryProvider).fetchPostSummary(postId),
-    );
+final chatPostProvider = FutureProvider.autoDispose.family<PostSummary, String>(
+  (ref, postId) => ref.watch(chatRepositoryProvider).fetchPostSummary(postId),
+);
 
 class ChatRoomState {
   final ChatRoomDetail detail;

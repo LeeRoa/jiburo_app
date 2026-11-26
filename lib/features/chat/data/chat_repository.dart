@@ -4,6 +4,7 @@ import 'package:jiburo_app/core/dto/api_response.dto.dart';
 import 'package:jiburo_app/core/network/api_endpoints.dart';
 import 'package:jiburo_app/core/network/dio_client.dart';
 import 'package:jiburo_app/features/chat/dto/chat_dtos.dart';
+import 'package:jiburo_app/features/lost_post/dto/post_summary.dart';
 
 class ChatRepository {
   final Dio dio;
@@ -30,9 +31,9 @@ class ChatRepository {
     return ChatRoomDetail.fromJson(_data(res.data) as Map<String, dynamic>);
   }
 
-  Future<ChatPostSummary> fetchPostSummary(String postId) async {
+  Future<PostSummary> fetchPostSummary(String postId) async {
     final res = await dio.get(ApiEndpoints.postById(postId));
-    return ChatPostSummary.fromJson(_data(res.data) as Map<String, dynamic>);
+    return PostSummary.fromJson(_data(res.data) as Map<String, dynamic>);
   }
 
   Future<void> exitRoom(String roomId) async {

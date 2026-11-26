@@ -9,6 +9,12 @@ String formatDate(DateTime date, WidgetRef ref) =>
 
 String formatCurrency(num amount) => NumberFormat('#,###').format(amount);
 
+/// 사례금(원)을 화면 표기로 분리: 300000 → (30, 만원), 5000 → (5,000, 원)
+({String amount, String unit}) formatRewardParts(int won) =>
+    won >= 10000 && won % 10000 == 0
+    ? (amount: formatCurrency(won ~/ 10000), unit: '만원')
+    : (amount: formatCurrency(won), unit: '원');
+
 /// 두 좌표 사이 거리(km, 하버사인)
 double distanceKm(double lat1, double lng1, double lat2, double lng2) {
   const r = 6371.0;
