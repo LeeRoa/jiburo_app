@@ -72,23 +72,44 @@ class _AddPostSecondScreenState extends ConsumerState<AddPostSecondScreen> {
   }
 
   void handleRewardChange(String value) {
+    // 입력값에 이미 콤마가 들어 있으므로 숫자만 추려서 변환 (빈 값/콤마 포함 값에서 int.parse가 예외를 내던 문제)
+    final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
+    final formatted = digits.isEmpty ? '' : formatCurrency(int.parse(digits));
+
     setState(() {
-      reward = value;
-      _rewardController.text = formatCurrency(int.parse(value));
+      reward = digits;
+      _rewardController.value = TextEditingValue(
+        text: formatted,
+        selection: TextSelection.collapsed(offset: formatted.length),
+      );
     });
   }
 
   void handleNextStep() {
+    final lostDate = _lostDate;
+    if (lostDate == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('실종 날짜를 선택해 주세요')));
+      return;
+    }
+
     ref
         .read(addPostProvider.notifier)
         .setPetInfo(
+          name: _nameController.text.trim(),
           animalTypeCode: selectedCode,
           breed: _breedController.text,
           age: int.tryParse(_ageController.text),
           weight: int.tryParse(_weightController.text),
           genderCode: selectGender,
-          reward: int.tryParse(_rewardController.text) ?? 0,
-          lostDate: _lostDate != null ? formatDate(_lostDate!, ref) : '',
+          // 입력창 값은 '100,000'처럼 서식이 들어가 있어 숫자만 추려서 변환
+          reward:
+              int.tryParse(
+                _rewardController.text.replaceAll(RegExp(r'[^0-9]'), ''),
+              ) ??
+              0,
+          lostDate: lostDate,
         );
 
     context.push(AppPaths.addPostThird);

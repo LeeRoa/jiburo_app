@@ -7,11 +7,13 @@ class LostPostCreateRequest {
   final String title;
   final String content;
   final String categoryCode; // common codes
+  final String? name;
   final String animalTypeCode; // common codes
   final String? breed;
   final String genderCode; // common codes
   final String? color;
   final int? age;
+  final int? weight;
   final List<String> imageUrls;
   final double latitude;
   final double longitude;
@@ -27,11 +29,13 @@ class LostPostCreateRequest {
     required this.title,
     required this.content,
     required this.categoryCode,
+    this.name,
     required this.animalTypeCode,
     required this.breed,
     required this.genderCode,
     required this.color,
     required this.age,
+    this.weight,
     required this.imageUrls,
     required this.latitude,
     required this.longitude,

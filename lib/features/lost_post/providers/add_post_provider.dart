@@ -34,16 +34,19 @@ class AddPostNotifier extends StateNotifier<AddPostState> {
     required String breed,
     required String genderCode,
     required int reward,
-    required String lostDate,
+    required DateTime lostDate,
+    String? name,
     int? age,
     int? weight,
   }) {
     final done = [...state.isDone]..[1] = true;
 
     state = state.copyWith(
+      name: name,
       animalTypeCode: animalTypeCode,
       breed: breed,
       age: age,
+      weight: weight,
       genderCode: genderCode,
       reward: reward,
       lostDate: lostDate,
@@ -69,14 +72,20 @@ class AddPostNotifier extends StateNotifier<AddPostState> {
     required String content,
     required WidgetRef ref,
   }) async {
-    if (!state.isValid) throw Exception('필수 항목을 입력해 주세요');
-
+    // 마지막 단계 입력값을 state에 반영한 뒤 검증 (이전에는 저장하지 않아 state.title!이 null이었음)
     state = state.copyWith(
+      title: title,
+      content: content,
       visibilityCode: 'PUBLIC',
       categoryCode: 'ANIMAL',
       isDone: state.isDone,
       isLoading: true,
     );
+
+    if (!state.isValid) {
+      state = state.copyWith(isDone: state.isDone, isLoading: false);
+      throw Exception('필수 항목을 입력해 주세요');
+    }
 
     try {
       await ref
@@ -86,11 +95,13 @@ class AddPostNotifier extends StateNotifier<AddPostState> {
               title: state.title!,
               content: state.content!,
               categoryCode: state.categoryCode!,
+              name: state.name,
               animalTypeCode: state.animalTypeCode!,
-              breed: state.breed!,
+              breed: state.breed,
               genderCode: state.genderCode!,
               color: state.color,
               age: state.age,
+              weight: state.weight,
               imageUrls: state.imageUrls!,
               latitude: state.latitude!,
               longitude: state.longitude!,
@@ -100,10 +111,10 @@ class AddPostNotifier extends StateNotifier<AddPostState> {
               visibilityCode: state.visibilityCode!,
             ),
           );
-      reset();
-    } finally {
-      final done = [...state.isDone]..[3] = true;
-      state = state.copyWith(isDone: done, isLoading: false);
+      reset(); // 성공 시에만 입력값 초기화 (실패하면 사용자가 다시 시도할 수 있게 유지)
+    } catch (_) {
+      state = state.copyWith(isDone: state.isDone, isLoading: false);
+      rethrow;
     }
   }
 }

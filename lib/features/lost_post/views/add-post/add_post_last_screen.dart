@@ -45,15 +45,30 @@ class _AddPostLastScreenState extends ConsumerState<AddPostLastScreen> {
     setState(() {});
   }
 
-  void submitPost() {
-    ref
-        .read(addPostProvider.notifier)
-        .submit(
-          title: _titleController.text,
-          content: _contentController.text,
-          ref: ref,
-        );
-    context.go(AppPaths.home);
+  bool _isSubmitting = false;
+
+  Future<void> submitPost() async {
+    if (_isSubmitting) return; // 중복 탭 방지
+    _isSubmitting = true;
+
+    try {
+      await ref
+          .read(addPostProvider.notifier)
+          .submit(
+            title: _titleController.text.trim(),
+            content: _contentController.text,
+            ref: ref,
+          );
+      if (!mounted) return;
+      context.go(AppPaths.home); // 성공했을 때만 이동
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('게시글 등록에 실패했어요. 잠시 후 다시 시도해 주세요')),
+      );
+    } finally {
+      _isSubmitting = false;
+    }
   }
 
   @override
