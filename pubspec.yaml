@@ -54,6 +54,7 @@ dependencies:
   flutter_image_compress: ^2.4.0
   path_provider: ^2.1.6
   kakao_flutter_sdk_user: ^1.10.0
+  stomp_dart_client: ^3.0.1
 
 # 스플래쉬 화면 설정
 flutter_native_splash:

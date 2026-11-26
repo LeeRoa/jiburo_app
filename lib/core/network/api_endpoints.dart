@@ -29,8 +29,15 @@ class ApiEndpoints {
 
   // chat
   static final rooms = '$_apiPrefix/chat/rooms';
+  static String room(String roomId) => '$_apiPrefix/chat/rooms/$roomId';
   static String roomsMessage(String roomId) =>
-      '$_apiPrefix/chat/rooms/$roomId/message';
+      '$_apiPrefix/chat/rooms/$roomId/messages';
   static String roomsSearch(String roomId) =>
-      '$_apiPrefix/chat/rooms/$roomId/message/search';
+      '$_apiPrefix/chat/rooms/$roomId/messages/search';
+  // STOMP (WebSocket), 서버 WebSocketConfig 기준
+  static const wsEndpoint = '/ws-jiburo';
+  static String subRoom(String roomId) => '/sub/chat/rooms/$roomId';
+  static String subRoomRead(String roomId) => '/sub/chat/rooms/$roomId/read';
+  static String pubRoom(String roomId) => '/pub/chat/rooms/$roomId';
+  static String pubRoomRead(String roomId) => '/pub/chat/rooms/$roomId/read';
 }

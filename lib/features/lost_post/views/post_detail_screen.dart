@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jiburo_app/core/routes/app_paths.dart';
+import 'package:jiburo_app/features/chat/data/chat_repository.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
 import 'package:jiburo_app/core/utils/auth_guard.dart';
 import 'package:jiburo_app/core/views/widgets/app-bar/index_app_bar.dart';
@@ -50,6 +54,24 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   ];
   final bool isSave = false;
   final bool isComplete = false;
+
+  /// 채팅방 생성(기존 방 존재 시 재사용) 후 대화 화면 이동
+  Future<void> _startChat() async {
+    if (!requireLogin(context, ref)) return;
+    try {
+      final room = await ref.read(chatRepositoryProvider).createRoom(widget.id);
+      if (!mounted) return;
+      context.push(AppPaths.messageDetail(room.roomId));
+    } catch (e) {
+      if (!mounted) return;
+      final message = e is DioException && e.response?.data is Map
+          ? (e.response!.data['message'] as String? ?? '채팅을 시작하지 못했어요')
+          : (e is ChatException ? e.message : '채팅을 시작하지 못했어요');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
   final imgs = ['assets/images/1.jpg', 'assets/images/2.png'];
 
   @override
@@ -138,7 +160,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                 btnName: isSave ? '채팅하기' : '저장하기',
                 onTap: () {
                   if (isSave) {
-                    print('채팅하기로 이동');
+                    _startChat();
                   } else {
                     if (!requireLogin(context, ref)) return;
                     print('저장하기');

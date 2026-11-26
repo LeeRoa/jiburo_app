@@ -3,14 +3,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiburo_app/core/views/widgets/input/input_text_widget.dart';
 
 class ChatInputBar extends StatefulWidget {
-  const ChatInputBar({super.key});
+  /// 전송 버튼 콜백 (true 반환 시 입력창 초기화)
+  final bool Function(String text) onSend;
+
+  /// 사진 선택 버튼 콜백
+  final VoidCallback? onPickImage;
+
+  const ChatInputBar({super.key, required this.onSend, this.onPickImage});
 
   @override
   State<ChatInputBar> createState() => _ChatInputBarState();
 }
 
 class _ChatInputBarState extends State<ChatInputBar> {
-  final FocusNode focusNode = FocusNode();
   final TextEditingController controller = TextEditingController();
   bool hasText = false;
 
@@ -18,50 +23,58 @@ class _ChatInputBarState extends State<ChatInputBar> {
   void initState() {
     super.initState();
     controller.addListener(() {
-      setState(() {
-        hasText = controller.text.isNotEmpty; // 텍스트 있으면 true
-      });
+      final next = controller.text.trim().isNotEmpty;
+      if (next != hasText) setState(() => hasText = next);
     });
   }
 
   @override
   void dispose() {
-    // 메모리 해제
     controller.dispose();
     super.dispose();
+  }
+
+  void _send() {
+    final text = controller.text;
+    if (text.trim().isEmpty) return;
+    if (widget.onSend(text)) controller.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                width: 48,
-                height: 48,
-                child: SvgPicture.asset("assets/images/icons/ic_add-img.svg"),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: widget.onPickImage,
+            child: Container(
+              alignment: Alignment.center,
+              width: 48,
+              height: 48,
+              child: SvgPicture.asset("assets/images/icons/ic_add-img.svg"),
+            ),
+          ),
+          Expanded(
+            child: InputTextWidget(
+              controller: controller,
+              placeHolder: '텍스트를 입력해 주세요.',
+              isChat: true,
+            ),
+          ),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: _send,
+            child: Container(
+              alignment: Alignment.center,
+              width: 48,
+              height: 48,
+              child: SvgPicture.asset(
+                'assets/images/icons/${hasText ? "ic_send=active" : "ic_send"}.svg',
               ),
-              Expanded(
-                child: InputTextWidget(
-                  controller: controller,
-                  placeHolder: '텍스트를 입력해 주세요.',
-                  isChat: true,
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                width: 48,
-                height: 48,
-                child: SvgPicture.asset(
-                  'assets/images/icons/${hasText ? "ic_send=active" : "ic_send"}.svg',
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),
