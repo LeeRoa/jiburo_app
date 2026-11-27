@@ -39,7 +39,12 @@ class SheetHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('$name님, 친구들을 찾아\n집으로 보내주세요', style: AppFonts.hd2B),
+                Text(
+                  name == null
+                      ? '친구들을 찾아\n집으로 보내주세요'
+                      : '$name님, 친구들을 찾아\n집으로 보내주세요',
+                  style: AppFonts.hd2B,
+                ),
                 IconBtn(
                   iconPath: 'assets/images/icons/ic_Refresh.svg',
                   onTap: onRefresh,

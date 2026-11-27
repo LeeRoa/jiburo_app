@@ -59,6 +59,16 @@ class LikedIdsNotifier extends AsyncNotifier<Set<String>> {
 final likedPostIdsProvider =
     AsyncNotifierProvider<LikedIdsNotifier, Set<String>>(LikedIdsNotifier.new);
 
+/// 저장 탭 목록. 저장/해제 시([likedPostIdsProvider] 변경) 다시 불러옴
+final likedPostsProvider = FutureProvider.autoDispose<List<PostSummary>>((
+  ref,
+) async {
+  ref.watch(authProvider);
+  ref.watch(likedPostIdsProvider);
+  if (TokenHolder.accessToken == null) return const <PostSummary>[];
+  return ref.watch(postRepositoryProvider).fetchLikedPosts();
+});
+
 /// 게시글 상세
 final postDetailProvider = FutureProvider.autoDispose
     .family<LostPostDetail, String>((ref, id) {

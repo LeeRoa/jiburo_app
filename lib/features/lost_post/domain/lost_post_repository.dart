@@ -34,6 +34,9 @@ abstract class LostPostRepository {
   /// 저장(관심) 토글. 토글 후 저장 상태를 반환
   Future<bool> toggleLike(String id);
 
+  /// 내가 저장한 게시글 (저장 탭)
+  Future<List<PostSummary>> fetchLikedPosts();
+
   /// 내가 저장한 게시글 ID 목록
   Future<Set<String>> fetchLikedIds();
 

@@ -142,16 +142,17 @@ class LostPostRepositoryImpl implements LostPostRepository {
   }
 
   @override
-  Future<Set<String>> fetchLikedIds() async {
+  Future<List<PostSummary>> fetchLikedPosts() async {
     final res = await dio.get(
       ApiEndpoints.postsLiked,
       queryParameters: {'page': 0, 'size': 200},
     );
-    final content = (unwrapApi(res.data) as Map<String, dynamic>)['content'];
-    return (content as List<dynamic>? ?? [])
-        .map((e) => (e as Map<String, dynamic>)['id'] as String)
-        .toSet();
+    return _summaries((unwrapApi(res.data) as Map<String, dynamic>)['content']);
   }
+
+  @override
+  Future<Set<String>> fetchLikedIds() async =>
+      (await fetchLikedPosts()).map((p) => p.id).toSet();
 
   @override
   Future<List<FinderNote>> fetchFinderNotes(String postId) async {
