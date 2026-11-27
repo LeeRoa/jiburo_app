@@ -24,20 +24,8 @@ class _MyPostsScreenState extends ConsumerState<MyPostsScreen> {
   static const _pageSize = 50;
   bool _byDistance = true;
 
-  /// 거리순: 내 위치를 알 때만 정렬 (모르면 서버가 준 최신순 그대로)
-  List<PostSummary> _sorted(List<PostSummary> posts) {
-    final list = [...posts];
-    if (!_byDistance) return list;
-    list.sort((a, b) {
-      final da = a.distanceFromMeKm;
-      final db = b.distanceFromMeKm;
-      if (da == null && db == null) return 0;
-      if (da == null) return 1;
-      if (db == null) return -1;
-      return da.compareTo(db);
-    });
-    return list;
-  }
+  List<PostSummary> _sorted(List<PostSummary> posts) =>
+      _byDistance ? posts.sortedByDistance() : posts;
 
   @override
   Widget build(BuildContext context) {

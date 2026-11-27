@@ -15,6 +15,10 @@ class ApiEndpoints {
   static final postSearch = '$_apiPrefix/posts/search';
   static final postNearBy = '$_apiPrefix/posts/nearby';
   static final postMap = '$_apiPrefix/posts/map';
+  static final postsLiked = '$_apiPrefix/posts/liked';
+  static String postLike(String id) => '$_apiPrefix/posts/$id/like';
+  static String postFinderSessions(String id) =>
+      '$_apiPrefix/posts/$id/finder-sessions';
 
   // auth
   static final authReissue = '$_apiPrefix/auth/reissue';

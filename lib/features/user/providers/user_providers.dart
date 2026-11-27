@@ -29,3 +29,9 @@ final myActivitiesProvider = FutureProvider.autoDispose
       if (TokenHolder.accessToken == null) return const <MyActivity>[];
       return ref.watch(userRepositoryProvider).getMyActivities(size: size);
     });
+
+/// 로그인한 사용자의 닉네임. 로그아웃 상태이면 null (프로필 API 호출 안 함)
+final myNicknameProvider = Provider<String?>((ref) {
+  if (!ref.watch(authProvider).isLogin) return null;
+  return ref.watch(myProfileProvider).valueOrNull?.nickname;
+});

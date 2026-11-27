@@ -57,5 +57,21 @@ extension PostSummaryDistance on PostSummary {
   }
 }
 
+extension PostSummaryListX on List<PostSummary> {
+  /// 내 위치 기준 가까운 순 (위치를 모르는 항목은 뒤로, 모두 모르면 원래 순서)
+  List<PostSummary> sortedByDistance() {
+    final list = [...this];
+    list.sort((a, b) {
+      final da = a.distanceFromMeKm;
+      final db = b.distanceFromMeKm;
+      if (da == null && db == null) return 0;
+      if (da == null) return 1;
+      if (db == null) return -1;
+      return da.compareTo(db);
+    });
+    return list;
+  }
+}
+
 DateTime? _parseTime(Object? v) =>
     v == null ? null : DateTime.tryParse(v as String);

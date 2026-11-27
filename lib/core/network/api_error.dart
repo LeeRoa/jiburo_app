@@ -1,4 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:jiburo_app/core/dto/api_response.dto.dart';
+
+/// ApiResponse 래퍼에서 data를 꺼냄. success가 false이면 예외
+dynamic unwrapApi(dynamic body) {
+  final api = ApiResponseDto<Object?>.fromJson(
+    body as Map<String, dynamic>,
+    (j) => j,
+  );
+  if (!api.success) {
+    throw Exception(api.message ?? '요청에 실패했어요');
+  }
+  return api.data;
+}
 
 /// 서버 오류 응답(ApiResponse 실패)의 안내 문구. 없으면 [fallback]
 String apiErrorMessage(Object e, {String fallback = '요청에 실패했어요'}) {

@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:jiburo_app/core/theme/app_fonts.dart';
 import 'package:jiburo_app/core/views/widgets/my_location_marker.dart';
+import 'package:jiburo_app/core/views/widgets/post_pin_marker.dart';
+import 'package:jiburo_app/features/lost_post/dto/post_summary.dart';
 import 'package:jiburo_app/features/lost_post/providers/add_post_provider.dart';
 import 'package:jiburo_app/features/lost_post/providers/add_post_state.dart';
 import 'package:jiburo_app/features/lost_post/providers/location_state.dart';
@@ -18,12 +20,31 @@ class KakaoMapScreen extends ConsumerStatefulWidget {
   final void Function() onTapReset;
   final double floatingBottom;
   final bool hasPin;
+
+  /// 지도에 표시할 게시글 마커
+  final List<PostSummary> pins;
+
+  /// 마커를 눌렀을 때 (게시글 ID)
+  final void Function(String postId)? onPinTap;
+
+  /// 지도 화면 영역이 바뀌었을 때 (이동·확대 후) 마커를 다시 불러오기 위한 알림
+  final void Function(
+    double minLat,
+    double maxLat,
+    double minLng,
+    double maxLng,
+  )?
+  onViewportChanged;
+
   const KakaoMapScreen({
     super.key,
     required this.onTap,
     required this.onTapReset,
     this.floatingBottom = 75,
     this.hasPin = false,
+    this.pins = const [],
+    this.onPinTap,
+    this.onViewportChanged,
   });
 
   @override
@@ -40,6 +61,13 @@ class _KakaoMapScreenState extends ConsumerState<KakaoMapScreen> {
   );
   double _heading = 0;
   Poi? myLocationPoi;
+
+  // 게시글 마커 (게시글 ID → 지도에 그려진 Poi)
+  final Map<String, Poi> _pinPois = {};
+  PoiStyle? _pinStyle;
+  bool _syncingPins = false;
+  bool _pinsDirty = false;
+  Timer? _viewportDebounce;
 
   StreamSubscription? _positionStream;
   StreamSubscription? _compassStream;
@@ -95,6 +123,78 @@ class _KakaoMapScreenState extends ConsumerState<KakaoMapScreen> {
   }
 
   @override
+  void didUpdateWidget(covariant KakaoMapScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.pins, widget.pins)) _syncPins();
+  }
+
+  /// 현재 보이는 영역을 알려 마커를 다시 불러오게 함 (연속 이동은 0.4초 후 한 번만)
+  void _notifyViewport() {
+    _viewportDebounce?.cancel();
+    _viewportDebounce = Timer(const Duration(milliseconds: 400), () async {
+      final callback = widget.onViewportChanged;
+      if (!mounted || callback == null || mapController == null) return;
+      final bounds = await mapController!.getBounds(context);
+      if (!mounted || bounds == null) return;
+      callback(
+        bounds.sw.latitude,
+        bounds.ne.latitude,
+        bounds.sw.longitude,
+        bounds.ne.longitude,
+      );
+    });
+  }
+
+  /// 목록과 지도 마커를 일치시킴: 사라진 건 지우고 새로 생긴 건 추가
+  Future<void> _syncPins() async {
+    if (mapController == null) return;
+    if (_syncingPins) {
+      _pinsDirty = true; // 진행 중이면 끝난 뒤 한 번 더
+      return;
+    }
+    _syncingPins = true;
+    try {
+      do {
+        _pinsDirty = false;
+        final controller = mapController!;
+        final wanted = {for (final p in widget.pins) p.id: p};
+
+        for (final id in _pinPois.keys.toList()) {
+          if (!wanted.containsKey(id)) {
+            await controller.labelLayer.removePoi(_pinPois.remove(id)!);
+          }
+        }
+
+        _pinStyle ??= PoiStyle(
+          icon: await KImage.fromWidget(
+            const PostPinMarker(),
+            const Size(48, 56),
+          ),
+          anchor: KPoint(0.5, 1.0),
+        );
+
+        for (final post in wanted.values) {
+          final lat = post.latitude;
+          final lng = post.longitude;
+          if (_pinPois.containsKey(post.id) || lat == null || lng == null) {
+            continue;
+          }
+          _pinPois[post.id] = await controller.labelLayer.addPoi(
+            LatLng(lat, lng),
+            style: _pinStyle!,
+            id: 'pin_${post.id}',
+            onClick: () => widget.onPinTap?.call(post.id),
+          );
+        }
+      } while (_pinsDirty && mounted);
+    } catch (_) {
+      // 마커 표시 실패는 지도 사용을 막지 않음
+    } finally {
+      _syncingPins = false;
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
 
@@ -132,6 +232,7 @@ class _KakaoMapScreenState extends ConsumerState<KakaoMapScreen> {
 
   @override
   void dispose() {
+    _viewportDebounce?.cancel();
     _positionStream?.cancel();
     _compassStream?.cancel();
     super.dispose();
@@ -162,6 +263,8 @@ class _KakaoMapScreenState extends ConsumerState<KakaoMapScreen> {
 
                   // 현재 위치 추적
                   await _initLocation();
+                  _notifyViewport();
+                  _syncPins();
                 },
 
                 // onMapClick: (point, position) => widget.onTap.call(),
@@ -171,6 +274,7 @@ class _KakaoMapScreenState extends ConsumerState<KakaoMapScreen> {
                   }
                 },
                 onCameraMoveEnd: (position, gestureType) {
+                  _notifyViewport();
                   if (gestureType == GestureType.pan) {
                     widget.onTapReset.call();
                   }

@@ -6,7 +6,9 @@ import 'package:jiburo_app/core/views/widgets/input/input_text_widget.dart';
 import 'package:jiburo_app/core/views/widgets/tabs/tab_widget.dart';
 
 class SheetHeader extends StatelessWidget {
-  final String name;
+  final String? name; // 로그인 전이면 null
+  final bool isDistanceSort;
+  final ValueChanged<bool> onSortChanged; // true: 거리순, false: 최신순
   final Function() onRefresh;
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
@@ -16,6 +18,8 @@ class SheetHeader extends StatelessWidget {
     super.key,
     required this.onRefresh,
     required this.name,
+    required this.isDistanceSort,
+    required this.onSortChanged,
     required this.searchController,
     required this.searchFocusNode,
     required this.onSearchChanged,
@@ -57,11 +61,11 @@ class SheetHeader extends StatelessWidget {
           const SizedBox(height: 24),
           TabWidget(
             firstLabel: '거리순',
-            firstIsActive: true,
-            firstOnTap: () {},
+            firstIsActive: isDistanceSort,
+            firstOnTap: () => onSortChanged(true),
             secondLabel: '최신순',
-            secondIsActive: false,
-            secondOnTap: () {},
+            secondIsActive: !isDistanceSort,
+            secondOnTap: () => onSortChanged(false),
           ),
           const SizedBox(height: 8),
         ],

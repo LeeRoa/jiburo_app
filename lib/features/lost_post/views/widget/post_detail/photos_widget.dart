@@ -5,6 +5,8 @@ import 'count_label.dart';
 
 class PhotosWidget extends StatefulWidget {
   final bool isComplete;
+
+  /// 서버 이미지 주소 목록 (비어 있으면 기본 이미지 1장)
   final List<String> imgs;
   const PhotosWidget({super.key, required this.imgs, this.isComplete = false});
 
@@ -44,23 +46,37 @@ class _PhotosWidgetState extends State<PhotosWidget> {
           aspectRatio: 4 / 3,
           child: PageView.builder(
             controller: _controller,
-            itemCount: widget.imgs.length,
+            itemCount: widget.imgs.isEmpty ? 1 : widget.imgs.length,
             itemBuilder: (context, index) {
-              return Image.asset(
+              const empty = 'assets/images/empty-img.png';
+              if (widget.imgs.isEmpty) {
+                return Image.asset(
+                  empty,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                );
+              }
+              return Image.network(
                 widget.imgs[index],
                 fit: BoxFit.cover,
                 width: double.infinity,
+                errorBuilder: (_, _, _) => Image.asset(
+                  empty,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
               );
             },
           ),
         ),
 
         if (widget.isComplete) CompleteCover(),
-        Positioned(
-          bottom: 12,
-          right: 12,
-          child: CountLabel(count: _currPage + 1, total: widget.imgs.length),
-        ),
+        if (widget.imgs.isNotEmpty)
+          Positioned(
+            bottom: 12,
+            right: 12,
+            child: CountLabel(count: _currPage + 1, total: widget.imgs.length),
+          ),
       ],
     );
   }
